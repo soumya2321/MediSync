@@ -53,12 +53,12 @@ export default function VerifyEmailPage() {
           </Button>
         </ResultPanel>
       ) : (
-        <ResultPanel icon={<MailCheck className="size-7" aria-hidden />} title="Email verified">
+        <ResultPanel icon={<MailCheck className="size-7 text-[#0D9488]" aria-hidden />} title="Email verified">
           <p>
-            Thanks — <span className="font-medium text-ink-900">{email}</span> is confirmed. You can sign in now.
+            Thanks — <span className="font-bold text-[#2D2118]">{email}</span> is confirmed. You can sign in now.
           </p>
           <Link to="/sign-in?verified=1" className="mt-5 block">
-            <Button size="lg" className="w-full" iconRight={<ArrowRight className="size-4" aria-hidden />}>
+            <Button variant="glow" size="lg" className="w-full" iconRight={<ArrowRight className="size-4" aria-hidden />}>
               Continue to sign in
             </Button>
           </Link>

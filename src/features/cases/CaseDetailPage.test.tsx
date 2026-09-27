@@ -12,7 +12,7 @@ describe('CaseDetailPage — practice view', () => {
   it('shows the diagnosis panel, blockers with rule IDs and the timeline', async () => {
     const eng = setupDemo('jordan');
     renderRoutes(routes, `/cases/${eng.seedKeys.c3}`);
-    expect(await screen.findByRole('heading', { name: /William Wilson/ })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /Vijay Singhania/ })).toBeInTheDocument();
     expect(await screen.findByText('Why is this stuck?')).toBeInTheDocument();
     expect((await screen.findAllByText('No refills remaining')).length).toBeGreaterThan(0);
     expect(screen.getAllByText('R6').length).toBeGreaterThan(0);
@@ -73,7 +73,7 @@ describe('CaseDetailPage — pharmacy view & isolation', () => {
     const eng = setupDemo('omar');
     renderRoutes(routes, `/cases/${eng.seedKeys.c16}`);
     expect(await screen.findByText('A.P.')).toBeInTheDocument();
-    expect(screen.queryByText(/Aisha/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ananya/)).not.toBeInTheDocument();
     expect(screen.queryByText('Why is this stuck?')).not.toBeInTheDocument();
     expect(await screen.findByRole('button', { name: /Confirm receipt/ })).toBeInTheDocument();
   });

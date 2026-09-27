@@ -18,7 +18,7 @@ describe('Pharmacy intake (fax → AI → confirm → send)', () => {
     renderRoutes(routes, '/pharmacy/requests/new');
     await user.click(await screen.findByRole('button', { name: 'Use sample fax' }));
     await user.click(screen.getByRole('button', { name: /Read fax with AI/ }));
-    expect(await screen.findByDisplayValue('Maria')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('Sunita')).toBeInTheDocument();
     expect(screen.getByDisplayValue('1000 mg')).toBeInTheDocument();
     // Sig is extracted at 70% confidence → must be confirmed individually.
     const send = screen.getByRole('button', { name: /Send request/ });

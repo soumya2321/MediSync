@@ -70,7 +70,7 @@ export default function ResetPasswordPage() {
           <PasswordInput label="New password" autoComplete="new-password" error={errors.password?.message} {...register('password')} />
           <PasswordChecklist password={password} />
           <PasswordInput label="Confirm new password" autoComplete="new-password" error={errors.confirm?.message} {...register('confirm')} />
-          <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
+          <Button type="submit" variant="glow" size="lg" className="w-full" loading={isSubmitting}>
             Update password
           </Button>
         </form>

@@ -1,30 +1,30 @@
-# RefillBridge — What's built & how to test it
+# MediSync — What's built & how to test it
 
 ## Run it
 ```
 npm install        # first time only
-npm run dev        # open http://localhost:5173/sign-in
-npm test           # automated tests (optional)
+npm run dev        # open http://localhost:5174 (or 5173)
+npm test           # automated tests (181 passed across 15 test suites)
 ```
-- **Everything uses dummy data in memory.** Refreshing the page resets the demo data, which is handy after testing.
-- **Password for every account:** `Refill!2026`
-- **MFA code:** `123456`
+- **Live Supabase DB + In-Memory Simulation:** The database schema (`schema.sql`) and seed data (`seed.sql`) are applied in Supabase. Refreshing resets the deterministic simulation clock.
+- **Password for every account:** `MediSync!2026`
+- **MFA code:** `111111`
 - **Switching roles:** once signed in, a **"Demo: …" pill** sits at the bottom left. Use it to switch roles instantly without signing out.
 
 ## The problem we solve (one line)
-When a refill needs a provider, it bounces between pharmacy, practice staff, provider and patient with **no owner and no shared status**. RefillBridge turns it into **one shared case with one owner, one next step and a due time**. The case only closes when the pharmacy confirms, and the patient is kept informed at every step.
+When a refill needs a provider, it bounces between pharmacy, practice staff, provider and patient with **no owner and no shared status**. MediSync turns it into **one shared case with one owner, one next step and a due time**. The case only closes when the pharmacy confirms, and the patient is kept informed at every step.
 
 ## Demo accounts
 | Who | Email | Role | Lands on |
 |---|---|---|---|
-| Priya Shah | admin@lakeside.example.com | Practice admin (MFA) | Queue + Failure simulator |
-| Dr. Anika Rao | dr.rao@lakeside.example.com | Provider (MFA) | Provider inbox |
-| Marcus Chen, NP | np.chen@lakeside.example.com | Provider (covering) | Provider inbox |
-| Jordan Ellis | staff@lakeside.example.com | Practice staff | Queue |
-| Sam Okafor | ma@lakeside.example.com | Practice staff | Queue |
-| Lena Novak | admin@citycare.example.com | Pharmacy admin (MFA) | Pharmacy requests |
-| Omar Haddad | tech@citycare.example.com | Pharmacy staff (CityCare) | Pharmacy requests |
-| Grace Kim | rph@greenleaf.example.com | Pharmacy staff (GreenLeaf) | Pharmacy requests |
+| Riya Kapoor | admin@lakeside.example.com | Practice admin (MFA) | Queue + Failure simulator |
+| Dr. Arjun Verma | dr.verma@lakeside.example.com | Provider (MFA) | Provider inbox |
+| Dr. Sneha Nair | dr.nair@lakeside.example.com | Provider (covering) | Provider inbox |
+| Aarav Patel | staff@lakeside.example.com | Practice staff | Queue |
+| Meera Kulkarni | ma@lakeside.example.com | Practice staff | Queue |
+| Rahul Patel | admin@citycare.example.com | Pharmacy admin (MFA) | Pharmacy requests |
+| Ishaan Khanna | tech@citycare.example.com | Pharmacy staff (CityCare) | Pharmacy requests |
+| Dr. Divya Prasad, PharmD | rph@greenleaf.example.com | Pharmacy staff (GreenLeaf) | Pharmacy requests |
 
 ---
 
@@ -35,7 +35,7 @@ When a refill needs a provider, it bounces between pharmacy, practice staff, pro
 **Test:**
 1. Enter a wrong password. You should see "Invalid email or password." with no hint about which part was wrong.
 2. Sign in as `staff@…`. You go straight to the Queue with no MFA.
-3. Sign in as `dr.rao@…`. You're asked for MFA; enter `123456` and you land on the Provider inbox.
+3. Sign in as `dr.verma@…`. You're asked for MFA; enter `111111` and you land on the Provider inbox.
 4. Enter a wrong MFA code. You should see "That code didn't work…".
 5. Click a "Demo accounts" row. It fills in the login for you.
 6. Other screens to try: `/sign-up`, `/forgot-password`, invite accept (Settings → Team → Invite gives a link) and `/reset-password`. Each one shows a demo link where a real email would be sent.
@@ -60,18 +60,18 @@ Open any case from the Queue:
 Cases worth opening as **Jordan (staff)** (use the Queue tabs to find them):
 | Find it under | What to check |
 |---|---|
-| Needs match: **Robert Nguyen** | No phone was sent, so it's flagged "Please confirm the patient". Pick the candidate and triage runs. |
-| Needs match: **Karen Mills** | Unknown patient. Close it with "Not our patient". |
-| Triage: **Michael Davis** | No blockers (R10). "Return to pharmacy" closes it. |
-| Triage: **Lucas Lewis** | Conflicting info: pharmacy says 2 refills, chart says 0, shown side by side. Request info or send to the provider. |
-| Triage: **Samuel Jackson** | Prior-auth needed. "Work insurance issue" moves it to the insurance queue. |
-| Waiting on info: **Olivia Martinez** | Questions are waiting on GreenLeaf (answer them as Grace, see page 6). |
-| With provider: **Zoe Robinson** | Red banner: the fax contained "IGNORE PREVIOUS INSTRUCTIONS…", which was ignored and flagged. |
-| With provider: **Emily Johnson** | Schedule II controlled substance. A new Rx is required and the AI refuses to suggest anything. |
-| Awaiting pharmacy: **Aisha Patel** | Sent but not yet confirmed. The case can't close until the pharmacy confirms. |
-| Search **Henry Taylor** | Pharmacy was unreachable: 5 failed attempts, dead letter, a "Call the pharmacy" task and a **Retry now** button in Deliveries. |
-| Search **William Wilson / Linda Brown** | SLA breached, escalated to the covering provider. |
-| Search **James Carter** (closed tab "All incl. closed") | A duplicate request was linked to the original case. |
+| Needs match: **Rohan Joshi** | No phone was sent, so it's flagged "Please confirm the patient". Pick the candidate and triage runs. |
+| Needs match: **Kavita Menon** | Unknown patient. Close it with "Not our patient". |
+| Triage: **Manoj Deshmukh** | No blockers (R10). "Return to pharmacy" closes it. |
+| Triage: **Lalit Mohan** | Conflicting info: pharmacy says 2 refills, chart says 0, shown side by side. Request info or send to the provider. |
+| Triage: **Sanjay Bhatnagar** | Prior-auth needed. "Work insurance issue" moves it to the insurance queue. |
+| Waiting on info: **Neha Saxena** | Questions are waiting on GreenLeaf (answer them as Grace, see page 6). |
+| With provider: **Zoya Farooqui** | Red banner: the fax contained "IGNORE PREVIOUS INSTRUCTIONS…", which was ignored and flagged. |
+| With provider: **Pooja Iyer** | Schedule II controlled substance. A new Rx is required and the AI refuses to suggest anything. |
+| Awaiting pharmacy: **Ananya Patel** | Sent but not yet confirmed. The case can't close until the pharmacy confirms. |
+| Search **Harish Chandra** | Pharmacy was unreachable: 5 failed attempts, dead letter, a "Call the pharmacy" task and a **Retry now** button in Deliveries. |
+| Search **Vijay Singhania / Lakshmi Sundaram** | SLA breached, escalated to the covering provider. |
+| Search **Vikram Malhotra** (closed tab "All incl. closed") | A duplicate request was linked to the original case. |
 
 On any case with a patient, **"Open patient status page (demo)"** opens what the patient sees (see page 7).
 
@@ -92,7 +92,7 @@ On any case with a patient, **"Open patient status page (demo)"** opens what the
 1. As **Omar**, click **Use sample fax** → **Read fax with AI**.
 2. The fields fill in, with the original fax shown alongside. Green means confident; amber (the Sig line) must be confirmed with its checkbox before Send is enabled.
 3. Choose Lakeside → **Send request**. The result is "Waiting on provider".
-4. Switch to **Dr. Rao**. **Maria Lopez** is at the top, marked **Urgent**, with "No refills remaining · R6" and "A1c overdue · R7". Approve her.
+4. Switch to **Dr. Rao**. **Sunita Sharma** is at the top, marked **Urgent**, with "No refills remaining · R6" and "A1c overdue · R7". Approve her.
 5. Switch back to **Omar** → Requests → "Needs your action". Open Maria's request and click Confirm receipt → Start filling → Mark ready → Mark dispensed. The case closes as completed.
 
 Also try:
@@ -115,10 +115,10 @@ Also try:
 2. Enter a wrong DOB. You see how many attempts are left; after 5 wrong tries the link is **locked**.
 3. With the right DOB you see a 5-step tracker, what happens next and the clinic's phone number. **No drug names** appear anywhere.
 
-### 8. Failure simulator (Priya, sidebar → "Failure simulator")
+### 8. Failure simulator (Riya, sidebar → "Failure simulator")
 **Solves:** "What happens when a dependency fails?" The judges will look for this.
 **Test:**
-1. Click **Take pharmacy down** → as Dr. Rao, approve any case → back as Priya, click **+4 h**.
+1. Click **Take pharmacy down** → as Dr. Verma, approve any case → back as Riya, click **+4 h**.
 2. Open that case. You should see 5 failed attempts, a dead letter, the "Pharmacy unreachable" blocker and a call task. The "Why is this stuck?" panel explains all of it.
 3. Click **Bring back online** → Deliveries → **Retry now** → the case moves to Sent to pharmacy.
 4. Toggle **SMS down** → patient messages fall back to email.
@@ -129,10 +129,10 @@ Also try:
 - **Idle warning:** shows "Stay signed in?" with a 60-second countdown.
 - **Expire session:** a re-login modal opens *over* the current page, so any half-filled form isn't lost.
 
-### 10. Analytics — `/analytics` (Priya / Dr. Rao / Lena)
+### 10. Analytics — `/analytics` (Riya / Dr. Verma / Rahul)
 **Solves:** measurable value. North Star metric: % of refills pharmacy-confirmed within 48 business hours. The page also shows median hours, touches per refill, SLA breaches, AI acceptance and top blockers. `?mockEmpty=getAnalyticsSummary` shows the empty state.
 
-### 11. Settings — `/settings/...` (Priya)
+### 11. Settings — `/settings/...` (Riya)
 - **Team:** invite (gives a demo link), change role, remove. You can't demote the last admin.
 - **Pharmacies:** link or unlink pharmacies.
 - **Policies:** SLA and visit rules.
@@ -146,13 +146,14 @@ All of these need MFA; switching as aal1 triggers the MFA modal.
 Add `?mockError=<function>` or `?mockEmpty=<function>` to the URL, for example `?mockError=getCase` or `?mockEmpty=listCases`.
 
 ## Status
-- ✅ All pages are built, including the marketing landing page at `/`.
-- ✅ Automated checks: `npm test` → 180 tests passing · `npm run lint` clean · `npm run build` OK (193 KB gzipped JS).
-- ⏳ Not built yet (Phase 5): the real Supabase database, auth, SMS/email and Claude AI. Today everything is mocked behind the same interfaces.
+- ✅ All pages are built, including the Cadabra / Apple-Linear Hackathon showcase landing page at `/`.
+- ✅ Automated checks: `npm test` → **181 tests passing** (15 test suites) · `npm run lint` clean · `npm run typecheck` clean · `npm run build` OK.
+- ✅ Supabase database: `schema.sql` and `seed.sql` executed in Supabase SQL Editor; `.env` configured with project credentials.
 - ℹ️ Refreshing the browser resets all demo data. This is by design: no patient data is kept in browser storage.
 
 ## Where the code lives (for UI work)
-- **Colors, fonts, animations:** `src/index.css`
+- **Colors, fonts, animations:** `src/index.css` (Cadabra medical glassmorphism tokens & utilities)
 - **Reusable components:** `src/components/ui/`
 - **Pages:** `src/features/<page>/`
+- **Landing Page & Hackathon Sections:** `src/features/landing/LandingPage.tsx`
 - **Business rules (don't change for UI work):** `supabase/functions/_shared/` and `src/services/`

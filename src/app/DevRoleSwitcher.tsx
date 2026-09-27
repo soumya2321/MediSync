@@ -53,7 +53,7 @@ export function DevRoleSwitcher() {
                     <span className="min-w-0">
                       <span className="block truncate font-medium text-ink-900">{u.name}</span>
                       <span className="block truncate text-[11.5px] text-ink-500">
-                        {ROLE_LABELS[u.role]} · {u.orgId === 'org-lfm' ? 'Lakeside' : u.orgId === 'org-citycare' ? 'CityCare' : 'GreenLeaf'}
+                        {ROLE_LABELS[u.role]} · {u.orgId === 'org-lfm' ? 'PeopleTree' : u.orgId === 'org-citycare' ? 'CityCare' : 'GreenLeaf'}
                       </span>
                     </span>
                     {user?.id === u.id && <span className="text-[11px] font-semibold text-brand-700">current</span>}

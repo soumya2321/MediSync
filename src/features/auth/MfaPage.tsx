@@ -46,7 +46,7 @@ function SwitchAccount() {
   // useAuth().signOut wraps authService.signOut(), clears caches and navigates to /sign-in without
   // triggering the "session expired" modal.
   return (
-    <button type="button" onClick={() => void signOut('manual')} className="font-semibold text-brand-700 underline-offset-2 hover:underline">
+    <button type="button" onClick={() => void signOut('manual')} className="font-semibold text-[#0D9488] underline-offset-2 hover:underline hover:text-[#0F5143]">
       Sign in as someone else
     </button>
   );
@@ -94,7 +94,7 @@ function VerifyFlow({ target }: { target: string }) {
       }
       description={
         <>
-          Open your authenticator app and enter the 6-digit code for <span className="font-medium text-ink-900">{user?.email}</span>.
+          Open your authenticator app and enter the 6-digit code for <span className="font-bold text-[#2D2118]">{user?.email}</span>.
         </>
       }
       footer={<SwitchAccount />}
@@ -107,11 +107,11 @@ function VerifyFlow({ target }: { target: string }) {
           void f.submit();
         }}
       >
-        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
+        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl border border-[#0D9488]/30 bg-[#0D9488]/15 text-[#0D9488] shadow-sm">
           <Smartphone className="size-7 animate-float" aria-hidden />
         </div>
         <CodeInput value={f.code} onChange={f.onChange} onComplete={(v) => void f.submit(v)} error={f.error} hint={`Demo code: ${DEMO_MFA_CODE}`} disabled={f.busy} autoFocus />
-        <Button type="submit" size="lg" className="w-full" loading={f.busy} icon={<ShieldCheck className="size-4" aria-hidden />}>
+        <Button type="submit" variant="glow" size="lg" className="w-full" loading={f.busy} icon={<ShieldCheck className="size-4" aria-hidden />}>
           Verify
         </Button>
       </form>
@@ -155,13 +155,13 @@ function EnrollFlow({ target }: { target: string }) {
       description={
         step === 1
           ? 'Your role approves clinical or admin actions, so we protect it with a code from an app like Google Authenticator or 1Password.'
-          : 'Enter the 6-digit code your app shows for RefillBridge.'
+          : 'Enter the 6-digit code your app shows for MediSync.'
       }
       footer={<SwitchAccount />}
     >
       <ol className="mb-6 flex items-center gap-2" aria-label="Setup progress">
         {[1, 2].map((s) => (
-          <li key={s} className={cn('h-1.5 flex-1 rounded-full transition-colors duration-500', s <= step ? 'bg-brand-600' : 'bg-ice-300')}>
+          <li key={s} className={cn('h-1.5 flex-1 rounded-full transition-colors duration-500', s <= step ? 'bg-[#0D9488]' : 'bg-[#8B6B4A]/20')}>
             <span className="sr-only">
               Step {s} {s < step ? 'done' : s === step ? 'current' : 'upcoming'}
             </span>
@@ -173,7 +173,7 @@ function EnrollFlow({ target }: { target: string }) {
           <motion.div key="s1" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} className="space-y-5">
             {secret.isPending ? (
               <div className="flex flex-col items-center gap-3" role="status" aria-label="Preparing your key">
-                <Skeleton className="size-40 rounded-xl" />
+                <Skeleton className="size-40 rounded-2xl" />
                 <Skeleton className="h-5 w-48" />
               </div>
             ) : secret.isError ? (
@@ -184,12 +184,12 @@ function EnrollFlow({ target }: { target: string }) {
               <>
                 <figure className="flex flex-col items-center">
                   <FauxQr seed={secret.data.secret} />
-                  <figcaption className="mt-3 text-[13px] font-medium text-ink-700">Scan with your authenticator app</figcaption>
+                  <figcaption className="mt-3 text-[13px] font-bold text-[#2D2118]">Scan with your authenticator app</figcaption>
                 </figure>
-                <div className="rounded-xl border border-line bg-ice-50 p-3.5">
-                  <p className="text-[12px] font-medium uppercase tracking-wide text-ink-500">Or enter this key</p>
+                <div className="rounded-2xl border border-white/95 bg-white/90 p-4 shadow-sm">
+                  <p className="text-[12px] font-bold uppercase tracking-wide text-[#8B6B4A]">Or enter this key</p>
                   <div className="mt-1.5 flex items-center justify-between gap-2">
-                    <code className="break-all font-mono text-[15px] font-semibold tracking-[0.12em] text-brand-900" aria-label={`Setup key ${secret.data.secret.split('').join(' ')}`}>
+                    <code className="break-all font-mono text-[15px] font-bold tracking-[0.12em] text-[#0D9488]" aria-label={`Setup key ${secret.data.secret.split('').join(' ')}`}>
                       {grouped}
                     </code>
                     <Button variant="ghost" size="sm" onClick={() => void copy()} icon={<Copy className="size-3.5" aria-hidden />}>
@@ -197,7 +197,7 @@ function EnrollFlow({ target }: { target: string }) {
                     </Button>
                   </div>
                 </div>
-                <Button size="lg" className="w-full" onClick={() => setStep(2)} iconRight={<ArrowRight className="size-4" aria-hidden />}>
+                <Button variant="glow" size="lg" className="w-full" onClick={() => setStep(2)} iconRight={<ArrowRight className="size-4" aria-hidden />}>
                   I've added it
                 </Button>
               </>
@@ -221,7 +221,7 @@ function EnrollFlow({ target }: { target: string }) {
               <Button variant="secondary" size="lg" onClick={() => setStep(1)}>
                 Back
               </Button>
-              <Button type="submit" size="lg" className="flex-1" loading={f.busy} icon={<KeyRound className="size-4" aria-hidden />}>
+              <Button type="submit" variant="glow" size="lg" className="flex-1" loading={f.busy} icon={<KeyRound className="size-4" aria-hidden />}>
                 Turn on verification
               </Button>
             </div>
@@ -270,10 +270,10 @@ function FauxQr({ seed }: { seed: string }) {
     });
   }, [seed]);
   return (
-    <div className="rounded-2xl border border-line bg-white p-3 shadow-[var(--shadow-soft)]" aria-hidden>
+    <div className="rounded-2xl border border-white/95 bg-white p-3 shadow-md" aria-hidden>
       <div className="grid size-40 gap-px" style={{ gridTemplateColumns: `repeat(${SIZE}, minmax(0, 1fr))` }}>
         {cells.map((on, i) => (
-          <span key={i} className={cn('rounded-[1px]', on ? 'bg-brand-950' : 'bg-transparent')} />
+          <span key={i} className={cn('rounded-[1px]', on ? 'bg-[#0D9488]' : 'bg-transparent')} />
         ))}
       </div>
     </div>

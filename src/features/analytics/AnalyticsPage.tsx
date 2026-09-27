@@ -14,6 +14,7 @@ import { Card, CardHeader, PageHeader } from '@/components/ui/Layout';
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States';
 import { cn } from '@/lib/format';
 import { HBarChart, WeeklyColumnChart, fadeUp } from './charts';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
 const RANGES = [
   { days: 7, label: 'Last 7 days' },
@@ -84,7 +85,7 @@ export default function AnalyticsPage() {
           <KpiTiles data={data} practice={practice} />
 
           <div className="grid gap-5 xl:grid-cols-5">
-            <motion.div {...fadeUp(4)} className="surface min-w-0 xl:col-span-3">
+            <motion.div {...fadeUp(4)} className="surface min-w-0 xl:col-span-3 rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm overflow-hidden">
               <WeeklyColumnChart
                 data={data.weekly}
                 title="Resolved per week"
@@ -92,7 +93,7 @@ export default function AnalyticsPage() {
                 footnote="Earlier weeks come from the nightly metrics rollup; this week is live."
               />
             </motion.div>
-            <motion.div {...fadeUp(5)} className="surface min-w-0 xl:col-span-2">
+            <motion.div {...fadeUp(5)} className="surface min-w-0 xl:col-span-2 rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm overflow-hidden">
               <HBarChart
                 title="Top blockers"
                 description={practice ? 'What stops refills most often.' : 'Why your requests needed more work.'}
@@ -103,7 +104,7 @@ export default function AnalyticsPage() {
           </div>
 
           <div className="grid gap-5 xl:grid-cols-5">
-            <motion.div {...fadeUp(6)} className="surface min-w-0 xl:col-span-2">
+            <motion.div {...fadeUp(6)} className="surface min-w-0 xl:col-span-2 rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm overflow-hidden">
               <HBarChart
                 title="Cases by status"
                 description="Where every case sits right now."
@@ -124,28 +125,28 @@ export default function AnalyticsPage() {
 
 function NorthStar({ pct, practice }: { pct: number; practice: boolean }) {
   return (
-    <motion.section {...fadeUp(0)} aria-labelledby="north-star-label" className="surface relative overflow-hidden p-5 sm:p-6">
-      <div className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-brand-100/60 blur-3xl" aria-hidden />
-      <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:gap-8">
+    <motion.section {...fadeUp(0)} aria-labelledby="north-star-label" className="cadabra-glass-card relative overflow-hidden p-6 sm:p-8 rounded-3xl border border-white/90 shadow-[0_16px_40px_rgba(139,107,74,0.08)]">
+      <div className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-[#98FF98]/20 blur-3xl" aria-hidden />
+      <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
         <div className="shrink-0">
-          <p className="flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-600">
+          <p className="flex items-center gap-1.5 text-[12px] font-bold uppercase tracking-[0.14em] text-[#0D9488]">
             <Target className="size-3.5" aria-hidden /> North Star
           </p>
-          <p className="mt-1 font-sans text-[56px] font-semibold leading-none text-brand-900 sm:text-[64px]">
-            {pct}
-            <span className="ml-0.5 text-[28px] font-medium text-brand-700">%</span>
+          <p className="mt-1 font-sans text-[56px] font-extrabold leading-none text-[#2D2118] sm:text-[64px]">
+            <AnimatedCounter value={pct} />
+            <span className="ml-0.5 text-[28px] font-bold text-[#0D9488]">%</span>
           </p>
         </div>
         <div className="min-w-0 flex-1">
-          <h2 id="north-star-label" className="text-lg font-semibold leading-snug text-ink-900">
+          <h2 id="north-star-label" className="text-lg font-bold leading-snug text-[#2D2118]">
             of stuck refills resolved (pharmacy-confirmed) within 48 business hours
           </h2>
-          <p className="mt-1.5 max-w-2xl text-sm text-ink-500">
+          <p className="mt-1.5 max-w-2xl text-sm font-medium text-[#5E4837]">
             A refill is <em>stuck</em> when something blocks it — no refills left, a visit or lab due, missing information, or insurance. It counts as resolved only when the pharmacy confirms
             receipt, not when {practice ? 'your team' : 'the practice'} clicks approve.
           </p>
-          <div className="mt-4 h-2 w-full max-w-xl overflow-hidden rounded-full bg-brand-100" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label="Stuck refills resolved within 48 business hours">
-            <motion.div className="h-full rounded-full bg-brand-600" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.9, ease: 'easeOut', delay: 0.15 }} />
+          <div className="mt-4 h-2.5 w-full max-w-xl overflow-hidden rounded-full bg-[#F5F0E6] border border-[#8B6B4A]/15" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label="Stuck refills resolved within 48 business hours">
+            <motion.div className="h-full rounded-full bg-gradient-to-r from-[#0D9488] via-[#14B8A6] to-[#93C572]" initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 1.2, ease: 'easeOut', delay: 0.15 }} />
           </div>
         </div>
       </div>
@@ -164,10 +165,15 @@ interface Tile {
 }
 
 function Value({ n, unit }: { n: number | string; unit?: string }) {
+  const num = typeof n === 'number' ? n : Number(n);
   return (
     <span className="inline-flex items-baseline gap-1">
-      <span className="text-[28px] font-semibold leading-none text-ink-900">{n}</span>
-      {unit && <span className="text-sm font-medium text-ink-500">{unit}</span>}
+      {Number.isFinite(num) ? (
+        <AnimatedCounter value={num} className="text-[28px] font-extrabold leading-none text-[#2D2118]" />
+      ) : (
+        <span className="text-[28px] font-extrabold leading-none text-[#2D2118]">{n}</span>
+      )}
+      {unit && <span className="text-sm font-semibold text-[#8B6B4A]">{unit}</span>}
     </span>
   );
 }
@@ -186,7 +192,7 @@ function KpiTiles({ data, practice }: { data: AnalyticsSummary; practice: boolea
       value: (
         <span className="flex items-baseline gap-3">
           <Value n={data.openCases} unit="open" />
-          <span className="text-ink-400" aria-hidden>
+          <span className="text-[#8B6B4A]" aria-hidden>
             /
           </span>
           <Value n={data.resolvedCases} unit="resolved" />
@@ -199,15 +205,15 @@ function KpiTiles({ data, practice }: { data: AnalyticsSummary; practice: boolea
   return (
     <ul aria-label="Key metrics" className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {tiles.map((t, i) => (
-        <motion.li key={t.label} {...fadeUp(i + 1)} className="surface flex flex-col gap-3 p-4 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]">
+        <motion.li key={t.label} {...fadeUp(i + 1)} className="cadabra-glass-card flex flex-col gap-3 p-5 rounded-3xl border border-white/90 shadow-[0_12px_28px_rgba(139,107,74,0.06)] transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_16px_36px_rgba(139,107,74,0.12)]">
           <div className="flex items-start justify-between gap-3">
-            <p className="text-[13px] font-medium text-ink-600">{t.label}</p>
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600" aria-hidden>
+            <p className="text-[13px] font-bold text-[#5E4837]">{t.label}</p>
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[#93C572]/20 text-[#0D9488]" aria-hidden>
               {t.icon}
             </span>
           </div>
           <div>{t.value}</div>
-          <p className="text-[12px] text-ink-500">{t.hint}</p>
+          <p className="text-[12px] font-medium text-[#8B6B4A]">{t.hint}</p>
         </motion.li>
       ))}
     </ul>
@@ -231,42 +237,42 @@ function ByPharmacy({ rows, practice }: { rows: AnalyticsSummary['byPharmacy']; 
           <table className="hidden w-full text-sm sm:table">
             <caption className="sr-only">Cases and median hours to acknowledge, by pharmacy</caption>
             <thead>
-              <tr className="border-b border-line text-left text-[12px] font-medium uppercase tracking-wide text-ink-400">
-                <th scope="col" className="px-5 py-2.5 font-medium">
+              <tr className="border-b border-[#8B6B4A]/15 bg-white/40 text-left text-[12px] font-bold uppercase tracking-wider text-[#8B6B4A]">
+                <th scope="col" className="px-6 py-3">
                   Pharmacy
                 </th>
-                <th scope="col" className="px-5 py-2.5 text-right font-medium">
+                <th scope="col" className="px-6 py-3 text-right">
                   Cases
                 </th>
-                <th scope="col" className="px-5 py-2.5 text-right font-medium">
+                <th scope="col" className="px-6 py-3 text-right">
                   Median to acknowledge
                 </th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.name} className="border-b border-line last:border-0 hover:bg-ice-50">
-                  <th scope="row" className="px-5 py-3 text-left font-medium text-ink-900">
+                <tr key={r.name} className="border-b border-[#8B6B4A]/10 last:border-0 hover:bg-white/80 transition-colors">
+                  <th scope="row" className="px-6 py-3.5 text-left font-bold text-[#2D2118]">
                     {r.name}
                   </th>
-                  <td className="px-5 py-3 text-right tabular-nums text-ink-700">{r.cases}</td>
-                  <td className="px-5 py-3 text-right tabular-nums text-ink-700">{r.medianAckHours ? `${r.medianAckHours} h` : '—'}</td>
+                  <td className="px-6 py-3.5 text-right tabular-nums font-semibold text-[#5E4837]">{r.cases}</td>
+                  <td className="px-6 py-3.5 text-right tabular-nums font-semibold text-[#5E4837]">{r.medianAckHours ? `${r.medianAckHours} h` : '—'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <ul className="divide-y divide-line sm:hidden">
+          <ul className="divide-y divide-[#8B6B4A]/10 sm:hidden">
             {rows.map((r) => (
-              <li key={r.name} className="px-5 py-3">
-                <p className="font-medium text-ink-900">{r.name}</p>
+              <li key={r.name} className="px-5 py-3.5">
+                <p className="font-bold text-[#2D2118]">{r.name}</p>
                 <dl className="mt-1 flex gap-6 text-[13px]">
                   <div>
-                    <dt className="text-ink-500">Cases</dt>
-                    <dd className="font-medium tabular-nums text-ink-900">{r.cases}</dd>
+                    <dt className="text-[#8B6B4A]">Cases</dt>
+                    <dd className="font-bold tabular-nums text-[#2D2118]">{r.cases}</dd>
                   </div>
                   <div>
-                    <dt className="text-ink-500">Median to acknowledge</dt>
-                    <dd className="font-medium tabular-nums text-ink-900">{r.medianAckHours ? `${r.medianAckHours} h` : '—'}</dd>
+                    <dt className="text-[#8B6B4A]">Median to acknowledge</dt>
+                    <dd className="font-bold tabular-nums text-[#2D2118]">{r.medianAckHours ? `${r.medianAckHours} h` : '—'}</dd>
                   </div>
                 </dl>
               </li>
@@ -281,7 +287,7 @@ function ByPharmacy({ rows, practice }: { rows: AnalyticsSummary['byPharmacy']; 
 // ------------------------------------------------------------------ States
 
 function AnalyticsEmpty({ role }: { role: string | undefined }) {
-  let description = 'Numbers appear here once refill requests start flowing through RefillBridge.';
+  let description = 'Numbers appear here once refill requests start flowing through MediSync.';
   let actions: ReactNode = null;
   if (role === 'pharmacy_admin') {
     description = 'Once you send refill requests to a linked practice, you will see how quickly they come back.';

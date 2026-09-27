@@ -99,24 +99,24 @@ export default function NewRequestPage() {
             <span className="font-light">Send a</span> <span className="font-bold">refill request</span>
           </>
         }
-        description="Paste or upload the fax you'd normally send — RefillBridge reads it, you check it, and the practice gets a case that's already triaged."
+        description="Paste or upload the fax you'd normally send — MediSync reads it, you check it, and the practice gets a case that's already triaged."
       />
       <AnimatePresence mode="wait">
         {stage.kind === 'input' && (
           <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-            <div className="mb-4 inline-flex rounded-xl bg-white p-1 ring-1 ring-line" role="tablist" aria-label="Input method">
+            <div className="mb-4 inline-flex rounded-2xl bg-white/80 p-1 border border-[#8B6B4A]/20 backdrop-blur-md shadow-xs" role="tablist" aria-label="Input method">
               {[
                 { v: 'fax' as const, l: 'Paste or upload a fax', i: <ScanText className="size-4" /> },
                 { v: 'manual' as const, l: 'Type the details', i: <Keyboard className="size-4" /> },
               ].map((t) => (
-                <button key={t.v} role="tab" type="button" aria-selected={tab === t.v} onClick={() => setTab(t.v)} className={cn('flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition', tab === t.v ? 'bg-brand-700 text-white shadow-sm' : 'text-ink-600 hover:bg-ice-100')}>
+                <button key={t.v} role="tab" type="button" aria-selected={tab === t.v} onClick={() => setTab(t.v)} className={cn('flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold transition-all duration-200', tab === t.v ? 'bg-[#0D9488] text-white shadow-sm' : 'text-[#5E4837] hover:text-[#2D2118] hover:bg-white')}>
                   {t.i} {t.l}
                 </button>
               ))}
             </div>
             {tab === 'fax' ? (
               <div className="grid gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-                <Card className="p-5">
+                <Card className="surface p-5">
                   <Textarea
                     label="Fax text"
                     value={faxText}
@@ -127,20 +127,20 @@ export default function NewRequestPage() {
                     hint={`${faxText.length.toLocaleString()} / 8,000 characters · treated as untrusted data`}
                     labelAction={
                       <div className="flex gap-1.5">
-                        <button type="button" onClick={() => setFaxText(SAMPLE_FAX)} className="rounded-md px-2 py-0.5 text-[12px] font-medium text-brand-700 hover:bg-brand-50">
+                        <button type="button" onClick={() => setFaxText(SAMPLE_FAX)} className="rounded-lg px-2 py-0.5 text-[12px] font-bold text-[#0D9488] hover:bg-[#0D9488]/10 transition-colors">
                           Use sample fax
                         </button>
-                        <button type="button" onClick={() => setFaxText(INJECTION_FAX)} className="rounded-md px-2 py-0.5 text-[12px] font-medium text-bad-700 hover:bg-bad-50">
+                        <button type="button" onClick={() => setFaxText(INJECTION_FAX)} className="rounded-lg px-2 py-0.5 text-[12px] font-bold text-bad-600 hover:bg-bad-50 transition-colors">
                           Suspicious sample
                         </button>
                       </div>
                     }
                   />
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <span className="inline-flex items-center gap-1.5 text-[12px] text-ink-400">
-                      <Sparkles className="size-3.5" /> Demo AI (mock) · fields under 75% confidence need your confirmation
+                    <span className="inline-flex items-center gap-1.5 text-[12px] text-[#8B6B4A]">
+                      <Sparkles className="size-3.5 text-[#0D9488]" /> Demo AI (mock) · fields under 75% confidence need your confirmation
                     </span>
-                    <Button size="lg" icon={<Wand2 className="size-4" />} loading={extract.isPending && !upload.isPending} disabled={!faxText.trim()} onClick={() => extract.mutate({ text: faxText })}>
+                    <Button variant="glow" size="lg" icon={<Wand2 className="size-4" />} loading={extract.isPending && !upload.isPending} disabled={!faxText.trim()} onClick={() => extract.mutate({ text: faxText })}>
                       Read fax with AI
                     </Button>
                   </div>
@@ -156,13 +156,16 @@ export default function NewRequestPage() {
                     setDragging(false);
                     onFile(e.dataTransfer.files[0]);
                   }}
-                  className={cn('flex flex-col items-center justify-center rounded-[var(--radius-card)] border-2 border-dashed p-8 text-center transition', dragging ? 'border-brand-500 bg-brand-50' : 'border-line-strong bg-white/70')}
+                  className={cn(
+                    'flex flex-col items-center justify-center rounded-3xl border-2 border-dashed p-8 text-center transition-all duration-200 backdrop-blur-md',
+                    dragging ? 'border-[#0D9488] bg-[#0D9488]/10 shadow-sm' : 'border-[#8B6B4A]/30 bg-white/70 hover:border-[#0D9488]/50',
+                  )}
                 >
-                  <div className="mb-3 flex size-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+                  <div className="mb-3 flex size-14 items-center justify-center rounded-2xl border border-[#0D9488]/30 bg-[#0D9488]/15 text-[#0D9488] shadow-sm">
                     <UploadCloud className="size-7 animate-float" aria-hidden />
                   </div>
-                  <p className="font-medium text-ink-900">Drop a fax file here</p>
-                  <p className="mt-1 text-sm text-ink-500">PDF, PNG or JPEG · up to 10 MB · stored privately</p>
+                  <p className="font-bold text-[#2D2118]">Drop a fax file here</p>
+                  <p className="mt-1 text-sm text-[#5E4837]">PDF, PNG or JPEG · up to 10 MB · stored privately</p>
                   <input ref={fileRef} type="file" accept="application/pdf,image/png,image/jpeg" className="sr-only" id="fax-file" onChange={(e) => onFile(e.target.files?.[0] ?? undefined)} />
                   <Button variant="secondary" className="mt-4" icon={<FileUp className="size-4" />} loading={upload.isPending || (extract.isPending && Boolean(upload.data))} onClick={() => fileRef.current?.click()}>
                     Choose file
@@ -178,19 +181,19 @@ export default function NewRequestPage() {
         {stage.kind === 'form' && (
           <motion.div key="form" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
             {stage.notice && (
-              <p role="status" className="rounded-xl border border-warn-600/25 bg-warn-50 px-4 py-3 text-sm text-warn-700">
+              <p role="status" className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
                 {stage.notice}
               </p>
             )}
             {extraction?.injectionSuspected && (
-              <p role="alert" className="flex items-start gap-2 rounded-xl border border-bad-600/25 bg-bad-50 px-4 py-3 text-sm text-bad-700">
-                <ShieldAlert className="mt-0.5 size-4 shrink-0" /> This document contains unusual instructions. Review carefully — they were ignored and will be flagged for the practice.
+              <p role="alert" className="flex items-start gap-2 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">
+                <ShieldAlert className="mt-0.5 size-4 shrink-0 text-rose-600" /> This document contains unusual instructions. Review carefully — they were ignored and will be flagged for the practice.
               </p>
             )}
             {extraction && (
-              <p className="flex flex-wrap items-center gap-2 text-sm text-ink-600">
-                <CheckCircle2 className="size-4 text-ok-600" /> Read {Object.keys(extraction.fields).length} fields in {(extraction.latencyMs / 1000).toFixed(1)} s ·{' '}
-                <span className="rounded-full bg-info-50 px-2 py-0.5 text-[11.5px] font-medium text-info-700">Demo AI (mock)</span> Green = confident · Amber = please confirm
+              <p className="flex flex-wrap items-center gap-2 text-sm text-[#5E4837]">
+                <CheckCircle2 className="size-4 text-[#0D9488]" /> Read {Object.keys(extraction.fields).length} fields in {(extraction.latencyMs / 1000).toFixed(1)} s ·{' '}
+                <span className="rounded-full bg-[#0D9488]/10 border border-[#0D9488]/25 px-2.5 py-0.5 text-[11.5px] font-bold text-[#0D9488]">Demo AI (mock)</span> Green = confident · Amber = please confirm
               </p>
             )}
             <RequestForm
@@ -202,16 +205,16 @@ export default function NewRequestPage() {
               submitting={create.isPending}
               onSubmit={(v) => create.mutate(v)}
               aside={
-                <Card className="overflow-hidden">
-                  <div className="flex items-center justify-between border-b border-line bg-ice-50 px-4 py-2.5">
-                    <p className="flex items-center gap-2 text-sm font-medium">
-                      <FileText className="size-4 text-brand-600" /> {stage.fileName ?? 'Original fax'}
+                <Card className="surface overflow-hidden">
+                  <div className="flex items-center justify-between border-b border-[#8B6B4A]/15 bg-white/90 px-4 py-2.5">
+                    <p className="flex items-center gap-2 text-sm font-bold text-[#2D2118]">
+                      <FileText className="size-4 text-[#0D9488]" /> {stage.fileName ?? 'Original fax'}
                     </p>
-                    <button type="button" onClick={() => setStage({ kind: 'input' })} className="text-[12.5px] font-medium text-brand-700 hover:underline">
+                    <button type="button" onClick={() => setStage({ kind: 'input' })} className="text-[12.5px] font-bold text-[#0D9488] hover:underline">
                       Start over
                     </button>
                   </div>
-                  <pre className="max-h-[560px] overflow-auto whitespace-pre-wrap p-4 font-mono text-[12.5px] leading-relaxed text-ink-700">{stage.faxText ?? `Uploaded file: ${stage.fileName}\n\n(The demo AI can't OCR images — it returns a labelled sample with lower confidence so you can practise confirming fields.)`}</pre>
+                  <pre className="max-h-[560px] overflow-auto whitespace-pre-wrap p-4 font-mono text-[12.5px] leading-relaxed text-[#5E4837]">{stage.faxText ?? `Uploaded file: ${stage.fileName}\n\n(The demo AI can't OCR images — it returns a labelled sample with lower confidence so you can practise confirming fields.)`}</pre>
                 </Card>
               }
             />
@@ -220,20 +223,20 @@ export default function NewRequestPage() {
 
         {stage.kind === 'done' && (
           <motion.div key="done" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="mx-auto max-w-xl">
-            <Card className="p-8 text-center">
-              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.1 }} className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-ok-50 text-ok-600">
+            <Card className="surface p-8 text-center rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm">
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.1 }} className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-[#93C572]/20 border border-[#93C572]/40 text-[#0D9488]">
                 <CheckCircle2 className="size-9" />
               </motion.div>
-              <h2 className="text-2xl font-light text-brand-900">
-                Request <span className="font-bold">{stage.detail.case.caseNumber}</span> sent
+              <h2 className="text-2xl font-light text-[#2D2118]">
+                Request <span className="font-bold text-[#0D9488]">{stage.detail.case.caseNumber}</span> sent
               </h2>
               <div className="mt-3 flex justify-center">
                 <StatusBadge status={stage.detail.case.status} />
               </div>
-              <p className="mt-3 text-sm text-ink-600">{stage.detail.view === 'pharmacy' ? stage.detail.case.nextStep : ''}</p>
+              <p className="mt-3 text-sm font-medium text-[#5E4837]">{stage.detail.view === 'pharmacy' ? stage.detail.case.nextStep : ''}</p>
               <div className="mt-6 flex flex-wrap justify-center gap-2">
                 <Link to={`/cases/${stage.detail.case.id}`}>
-                  <Button>Track this request</Button>
+                  <Button variant="glow">Track this request</Button>
                 </Link>
                 <Button
                   variant="secondary"

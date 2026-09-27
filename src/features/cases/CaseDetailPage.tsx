@@ -86,21 +86,21 @@ function PracticeCaseView({ detail }: { detail: PracticeCaseDetail }) {
       <motion.header initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
           <div className="mb-2 flex flex-wrap items-center gap-2">
-            <span className="rounded-md bg-white px-2 py-0.5 font-mono text-[12.5px] font-medium text-brand-800 ring-1 ring-line">{c.caseNumber}</span>
+            <span className="rounded-lg bg-[#0D9488]/10 border border-[#0D9488]/30 px-2.5 py-0.5 font-mono text-[12.5px] font-bold text-[#0D9488] shadow-xs">{c.caseNumber}</span>
             <StatusBadge status={c.status} />
             <PriorityBadge priority={c.priority} />
             <SlaBadge state={c.slaState} dueAt={c.dueAt} now={now} />
-            {c.escalationLevel > 0 && <span className="rounded-full bg-bad-50 px-2 py-0.5 text-[12px] font-medium text-bad-700 ring-1 ring-bad-600/20">Escalation level {c.escalationLevel}</span>}
+            {c.escalationLevel > 0 && <span className="rounded-full bg-bad-50 border border-bad-200 px-2.5 py-0.5 text-[12px] font-semibold text-bad-700">Escalation level {c.escalationLevel}</span>}
           </div>
-          <h1 className="text-[26px] leading-tight text-brand-900 sm:text-[30px]">
-            <span className="font-bold">{c.patientName}</span>
-            {detail.patientAge !== null && <span className="font-light">, {detail.patientAge}</span>}
+          <h1 className="text-[26px] leading-tight font-display font-extrabold text-[#2D2118] sm:text-[30px]">
+            <span>{c.patientName}</span>
+            {detail.patientAge !== null && <span className="font-normal text-[#8B6B4A]">, {detail.patientAge}</span>}
           </h1>
-          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-600">
+          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-[#5E4837]">
             <span className="inline-flex items-center gap-1.5">
-              <Pill className="size-4 text-brand-500" aria-hidden /> {c.medication}
+              <Pill className="size-4 text-[#0D9488]" aria-hidden /> {c.medication}
             </span>
-            {detail.patient && <span className="font-mono text-[12.5px] text-ink-500">{detail.patient.chartNumber}</span>}
+            {detail.patient && <span className="font-mono text-[12.5px] text-[#0D9488] font-semibold">{detail.patient.chartNumber}</span>}
             <span>via {detail.pharmacy.name}</span>
           </p>
         </div>
@@ -194,13 +194,13 @@ function Banner({ tone, icon, title, children }: { tone: 'bad' | 'info' | 'warn'
 
 function ConflictsPanel({ conflicts }: { conflicts: PracticeCaseDetail['conflicts'] }) {
   return (
-    <section aria-labelledby="conflicts" className="rounded-xl border border-warn-600/30 bg-warn-50/60 p-4">
-      <h2 id="conflicts" className="flex items-center gap-2 text-sm font-semibold text-warn-700">
-        <FileWarning className="size-4" /> Conflicting information (R8)
+    <section aria-labelledby="conflicts" className="rounded-2xl border border-amber-200 bg-amber-50/80 backdrop-blur-md p-4 shadow-sm">
+      <h2 id="conflicts" className="flex items-center gap-2 text-sm font-bold text-amber-900">
+        <FileWarning className="size-4 text-amber-700" /> Conflicting information (R8)
       </h2>
-      <div className="mt-3 overflow-hidden rounded-lg border border-line bg-white">
+      <div className="mt-3 overflow-hidden rounded-xl border border-amber-200 bg-white/90">
         <table className="w-full text-sm">
-          <thead className="bg-ice-50 text-left text-[11.5px] uppercase tracking-wide text-ink-400">
+          <thead className="bg-amber-100/60 text-left text-[11.5px] uppercase tracking-wide text-amber-900 font-bold">
             <tr>
               <th className="px-3 py-2">Field</th>
               <th className="px-3 py-2">Pharmacy says</th>
@@ -209,10 +209,10 @@ function ConflictsPanel({ conflicts }: { conflicts: PracticeCaseDetail['conflict
           </thead>
           <tbody>
             {conflicts.map((c) => (
-              <tr key={c.field} className="border-t border-line">
-                <td className="px-3 py-2 text-ink-600">{c.field}</td>
-                <td className="px-3 py-2 font-semibold text-warn-700">{c.reported}</td>
-                <td className="px-3 py-2 font-semibold text-brand-800">{c.chart}</td>
+              <tr key={c.field} className="border-t border-amber-100 font-medium">
+                <td className="px-3 py-2 text-[#2D2118]">{c.field}</td>
+                <td className="px-3 py-2 font-semibold text-amber-700">{c.reported}</td>
+                <td className="px-3 py-2 font-semibold text-[#8B6B4A]">{c.chart}</td>
               </tr>
             ))}
           </tbody>
@@ -357,7 +357,7 @@ function ActionsCard({ detail }: { detail: PracticeCaseDetail }) {
             })}
           </div>
         ) : (
-          !isTerminal && <p className="text-sm text-ink-500">{c.status === 'WAITING_ON_PROVIDER' ? (user?.role === 'provider' ? 'Open the decision panel to decide.' : 'Waiting for the provider. Only providers can make clinical decisions.') : 'No manual action needed right now — RefillBridge is handling the next step.'}</p>
+          !isTerminal && <p className="text-sm text-ink-500">{c.status === 'WAITING_ON_PROVIDER' ? (user?.role === 'provider' ? 'Open the decision panel to decide.' : 'Waiting for the provider. Only providers can make clinical decisions.') : 'No manual action needed right now — MediSync is handling the next step.'}</p>
         )}
       </div>
       {dialog === 'REQUEST_INFO' ? (
@@ -418,19 +418,19 @@ function FactsCard({ detail }: { detail: PracticeCaseDetail }) {
           </p>
         )}
         {rx && (
-          <div className="rounded-xl bg-ice-50 p-3.5">
-            <p className="text-sm font-semibold text-ink-900">
-              {rx.medicationName} {rx.strength} <span className="font-normal text-ink-500">{rx.form}</span>
+          <div className="rounded-2xl bg-white/80 border border-[#8B6B4A]/20 p-4 shadow-sm">
+            <p className="text-sm font-bold text-[#2D2118]">
+              {rx.medicationName} {rx.strength} <span className="font-normal text-[#8B6B4A]">{rx.form}</span>
             </p>
-            <p className="mt-0.5 text-[13px] text-ink-600">{rx.sig}</p>
+            <p className="mt-0.5 text-[13px] text-[#5E4837]">{rx.sig}</p>
             <dl className="mt-3 grid grid-cols-3 gap-2">
               <KeyValue label="Qty">{rx.quantity}</KeyValue>
               <KeyValue label="Refills left">
-                <span className={rx.refillsRemaining === 0 ? 'font-semibold text-bad-700' : ''}>{rx.refillsRemaining}</span>
+                <span className={rx.refillsRemaining === 0 ? 'font-semibold text-bad-600' : ''}>{rx.refillsRemaining}</span>
               </KeyValue>
               <KeyValue label="Last fill">{formatDate(rx.lastFillAt, { month: 'short', day: 'numeric' })}</KeyValue>
             </dl>
-            <p className="mt-2 text-[12px] text-ink-500">
+            <p className="mt-2 text-[12px] text-[#8B6B4A]">
               {rx.controlledSchedule ? `Schedule ${rx.controlledSchedule} · ` : ''}
               {rx.status !== 'active' ? `Status: ${rx.status} · ` : ''}Written {formatDate(rx.writtenAt)}
             </p>
@@ -438,12 +438,12 @@ function FactsCard({ detail }: { detail: PracticeCaseDetail }) {
         )}
         {detail.priorCases.length > 0 && (
           <div>
-            <p className="mb-1.5 text-[12px] font-medium uppercase tracking-wide text-ink-400">Other requests (12 months)</p>
+            <p className="mb-1.5 text-[12px] font-bold uppercase tracking-wider text-[#8B6B4A]">Other requests (12 months)</p>
             <ul className="space-y-1">
               {detail.priorCases.slice(0, 4).map((pc) => (
                 <li key={pc.id}>
-                  <Link to={`/cases/${pc.id}`} className="flex items-center justify-between gap-2 rounded-md px-2 py-1 text-[13px] hover:bg-ice-100">
-                    <span className="font-mono text-brand-700">{pc.caseNumber}</span>
+                  <Link to={`/cases/${pc.id}`} className="flex items-center justify-between gap-2 rounded-xl px-2.5 py-1.5 text-[13px] hover:bg-white/80 transition-all hover:scale-[1.01]">
+                    <span className="font-mono font-bold text-[#0D9488]">{pc.caseNumber}</span>
                     <StatusBadge status={pc.status} />
                   </Link>
                 </li>

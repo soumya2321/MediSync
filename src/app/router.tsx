@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
-import { createBrowserRouter, Outlet, ScrollRestoration, useRouteError } from 'react-router-dom';
+import { createBrowserRouter, Outlet, ScrollRestoration, useLocation, useRouteError } from 'react-router-dom';
+import { AnimatePresence, motion } from 'motion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { PHARMACY_ROLES, PRACTICE_ROLES } from '@shared/types.ts';
 import { onBackendChange } from '@/services/mock/backend';
@@ -60,12 +61,30 @@ function BackendBridge() {
   return null;
 }
 
+function PageTransition() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait" initial={true}>
+      <motion.div
+        key={location.pathname}
+        initial={{ scale: 1.08, opacity: 0 }}
+        animate={{ scale: 1.0, opacity: 1 }}
+        exit={{ scale: 0.98, opacity: 0, transition: { duration: 0.45, ease: 'easeInOut' } }}
+        transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full"
+      >
+        <Outlet />
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
 function RootLayout() {
   return (
     <AuthProvider>
       <BackendBridge />
       <Suspense fallback={<PageFallback />}>
-        <Outlet />
+        <PageTransition />
       </Suspense>
       <ScrollRestoration />
     </AuthProvider>

@@ -64,8 +64,8 @@ export function mockExtractFromFile(fileName: string): Omit<IntakeExtraction, 's
     injectionSuspected: false,
     unreadable: false,
     fields: {
-      patientFirstName: field('Maria', 0.88, span),
-      patientLastName: field('Lopez', 0.88, span),
+      patientFirstName: field('Sunita', 0.88, span),
+      patientLastName: field('Sharma', 0.88, span),
       patientDob: field('1961-04-12', 0.71, span),
       patientPhone: field('(312) 555-0101', 0.8, span),
       medicationName: field('Metformin', 0.9, span),

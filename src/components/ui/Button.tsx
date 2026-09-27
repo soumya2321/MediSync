@@ -2,7 +2,7 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/format';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'subtle' | 'success';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'subtle' | 'success' | 'glow' | 'glass';
 type Size = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -15,12 +15,21 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-brand-700 text-white shadow-[0_1px_0_rgb(255_255_255/0.15)_inset,0_6px_16px_-6px_rgb(27_77_91/0.6)] hover:bg-brand-800 hover:shadow-[0_1px_0_rgb(255_255_255/0.15)_inset,0_10px_22px_-8px_rgb(27_77_91/0.7)] active:bg-brand-900',
-  secondary: 'border border-line-strong bg-white text-ink-900 hover:border-brand-300 hover:bg-brand-50 active:bg-brand-100',
-  ghost: 'text-ink-700 hover:bg-brand-50 hover:text-brand-800 active:bg-brand-100',
-  subtle: 'bg-brand-100 text-brand-800 hover:bg-brand-200 active:bg-brand-300',
-  danger: 'bg-bad-600 text-white hover:bg-bad-700 shadow-[0_6px_16px_-6px_rgb(187_58_51/0.55)]',
-  success: 'bg-ok-600 text-white hover:bg-ok-700 shadow-[0_6px_16px_-6px_rgb(27_127_80/0.5)]',
+    'bg-gradient-to-r from-[#0D9488] to-[#14B8A6] text-white font-semibold shadow-[0_4px_16px_rgba(13,148,136,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.4)] hover:scale-[1.03] active:scale-[0.98]',
+  secondary:
+    'border border-[#8B6B4A]/20 bg-white/90 backdrop-blur-md text-[#2D2118] font-semibold hover:border-[#0D9488]/40 hover:bg-white hover:scale-[1.03] shadow-xs active:scale-[0.98]',
+  ghost:
+    'text-[#5E4837] font-semibold hover:bg-white/80 hover:text-[#0D9488] hover:scale-[1.03] active:scale-[0.98]',
+  subtle:
+    'bg-[#93C572]/20 text-[#0F5143] font-semibold hover:bg-[#93C572]/30 hover:scale-[1.03] active:scale-[0.98]',
+  danger:
+    'bg-gradient-to-r from-rose-600 to-rose-700 text-white font-semibold shadow-[0_4px_16px_rgba(225,29,72,0.25)] hover:shadow-[0_6px_24px_rgba(225,29,72,0.4)] hover:scale-[1.03] active:scale-[0.98]',
+  success:
+    'bg-gradient-to-r from-[#93C572] to-[#0D9488] text-white font-semibold shadow-[0_4px_16px_rgba(13,148,136,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.4)] hover:scale-[1.03] active:scale-[0.98]',
+  glow:
+    'bg-gradient-to-r from-[#0D9488] via-[#14B8A6] to-[#0F766E] text-white font-semibold border border-[#98FF98]/40 shadow-[0_0_22px_rgba(13,148,136,0.35),0_4px_16px_rgba(139,107,74,0.1)] hover:from-[#14B8A6] hover:to-[#0D9488] hover:shadow-[0_0_28px_rgba(13,148,136,0.5)] hover:scale-[1.03] active:scale-[0.98]',
+  glass:
+    'bg-white/80 backdrop-blur-md text-[#0D9488] font-semibold border border-white/95 hover:bg-white hover:text-[#0F5143] hover:scale-[1.03] shadow-[0_4px_16px_rgba(139,107,74,0.06)] active:scale-[0.98]',
 };
 
 const sizes: Record<Size, string> = {

@@ -59,7 +59,7 @@ export function DecisionPanel({ detail, maxBridgeDays = 30, onDecided }: { detai
     [rx, req, maxBridgeDays],
   );
   const form = useForm<DecisionInput>({ resolver: zodResolver(decisionSchema), mode: 'onBlur', defaultValues: defaults });
-  useEffect(() => form.reset(defaults), [defaults, form]);
+  useEffect(() => form.reset(defaults), [detail.case.id]); // eslint-disable-line react-hooks/exhaustive-deps
   const decision = useWatch({ control: form.control, name: 'decision' });
   const bridgeDays = useWatch({ control: form.control, name: 'bridgeDays' });
   const errors = form.formState.errors;
@@ -137,17 +137,17 @@ export function DecisionPanel({ detail, maxBridgeDays = 30, onDecided }: { detai
   }
   const controlled = rx?.controlledSchedule;
   return (
-    <section aria-labelledby="decide" className="surface overflow-hidden">
-      <div className="border-b border-line bg-gradient-to-r from-brand-50 to-white px-5 py-4">
-        <h2 id="decide" className="flex items-center gap-2 text-[15px] font-semibold text-ink-900">
-          <Signature className="size-4 text-brand-600" /> Your decision
+    <section aria-labelledby="decide" className="rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm overflow-hidden">
+      <div className="border-b border-[#8B6B4A]/15 bg-gradient-to-r from-[#93C572]/15 via-white/80 to-[#98FF98]/20 px-6 py-4">
+        <h2 id="decide" className="flex items-center gap-2 text-[15px] font-bold text-[#2D2118]">
+          <Signature className="size-4 text-[#0D9488]" /> Your decision
         </h2>
-        <p className="mt-0.5 text-[13px] text-ink-500">You'll review the full order before it's signed. MFA is required.</p>
+        <p className="mt-0.5 text-[13px] font-medium text-[#5E4837]">You'll review the full order before it's signed. MFA is required.</p>
       </div>
-      <form onSubmit={openReview} className="space-y-5 p-5" noValidate>
+      <form onSubmit={openReview} className="space-y-5 p-6" noValidate>
         {controlled && (
-          <div role="alert" className="flex gap-2.5 rounded-lg border border-bad-600/25 bg-bad-50 p-3 text-[13px] text-bad-700">
-            <ShieldAlert className="mt-0.5 size-4 shrink-0" />
+          <div role="alert" className="flex gap-2.5 rounded-2xl border border-rose-200 bg-rose-50/90 p-3.5 text-[13px] font-medium text-rose-800">
+            <ShieldAlert className="mt-0.5 size-4 shrink-0 text-rose-600" />
             <p>
               Schedule {controlled} controlled substance. No AI suggestions.{' '}
               {controlled === 'II' ? 'Schedule II cannot be refilled — approving issues a new prescription with 0 refills.' : 'Check your state PDMP before approving.'}
@@ -156,25 +156,25 @@ export function DecisionPanel({ detail, maxBridgeDays = 30, onDecided }: { detai
         )}
         <fieldset>
           <legend className="sr-only">Decision</legend>
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="grid gap-2.5 sm:grid-cols-2">
             {DECISIONS.map((d) => {
               const active = decision === d.value;
               return (
                 <label
                   key={d.value}
                   className={cn(
-                    'relative flex cursor-pointer gap-3 rounded-xl border bg-white p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]',
-                    active ? 'border-brand-500 ring-2 ring-brand-200' : 'border-line hover:border-brand-300',
+                    'relative flex cursor-pointer gap-3 rounded-2xl border bg-white/80 p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs',
+                    active ? 'border-[#0D9488] ring-2 ring-[#0D9488]/20 bg-white/95 shadow-sm' : 'border-[#8B6B4A]/15 hover:border-[#0D9488]/30',
                     d.value === 'DENY' && 'sm:col-span-2',
                   )}
                 >
                   <input type="radio" value={d.value} {...form.register('decision')} className="sr-only" />
                   <span className={cn('mt-0.5', d.tone)}>{d.icon}</span>
                   <span className="min-w-0">
-                    <span className="block text-sm font-semibold text-ink-900">{d.label}</span>
-                    <span className="block text-[12.5px] text-ink-500">{d.description}</span>
+                    <span className="block text-sm font-bold text-[#2D2118]">{d.label}</span>
+                    <span className="block text-[12.5px] font-medium text-[#5E4837]">{d.description}</span>
                   </span>
-                  {active && <motion.span layoutId="decision-dot" className="absolute right-3 top-3 size-2.5 rounded-full bg-brand-600" />}
+                  {active && <motion.span layoutId="decision-dot" className="absolute right-3.5 top-3.5 size-2.5 rounded-full bg-[#0D9488]" />}
                 </label>
               );
             })}

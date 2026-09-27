@@ -43,14 +43,14 @@ describe('authentication & sessions', () => {
     await expect(auth.signIn('admin@lakeside.example.com', 'nope')).rejects.toThrow('Invalid email or password.');
   });
   it('provider sign-in requires MFA, then aal2', async () => {
-    const r = await auth.signIn('dr.rao@lakeside.example.com', 'Refill!2026');
+    const r = await auth.signIn('dr.verma@lakeside.example.com', 'MediSync!2026');
     expect(r.status).toBe('mfa_required');
     await expect(auth.verifyMfa('000000')).rejects.toThrow("That code didn't work");
-    await auth.verifyMfa('123456');
+    await auth.verifyMfa('111111');
     expect(auth.currentUser()?.aal).toBe('aal2');
   });
   it('staff sign in without MFA', async () => {
-    expect((await auth.signIn('staff@lakeside.example.com', 'Refill!2026')).status).toBe('signed_in');
+    expect((await auth.signIn('staff@lakeside.example.com', 'MediSync!2026')).status).toBe('signed_in');
   });
   it('sign-up honeypot returns the neutral message but creates nothing', async () => {
     const before = eng.db.users.length;
@@ -139,7 +139,7 @@ describe('North Star: stuck → solved', () => {
   it('fax → extraction → auto-triage → provider approves → dispatched → pharmacy confirms → dispensed', async () => {
     as('omar');
     const ext = await svc.extractIntake({ text: SAMPLE_FAX });
-    expect(ext.fields.patientFirstName?.value).toBe('Maria');
+    expect(ext.fields.patientFirstName?.value).toBe('Sunita');
     expect(ext.fields.patientDob?.value).toBe('1961-04-12');
     expect(ext.fields.strength?.value).toBe('1000 mg');
     expect(Object.values(ext.fields).every((f) => f?.sourceSpan)).toBe(true);

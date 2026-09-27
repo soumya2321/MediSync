@@ -33,18 +33,18 @@ import { cn, dueIn } from '@/lib/format';
 
 type Tone = 'neutral' | 'brand' | 'ok' | 'warn' | 'bad' | 'info' | 'muted';
 const tones: Record<Tone, string> = {
-  neutral: 'bg-ice-100 text-ink-700 ring-line-strong',
-  brand: 'bg-brand-50 text-brand-800 ring-brand-200',
-  ok: 'bg-ok-50 text-ok-700 ring-ok-600/25',
-  warn: 'bg-warn-50 text-warn-700 ring-warn-600/25',
-  bad: 'bg-bad-50 text-bad-700 ring-bad-600/25',
-  info: 'bg-info-50 text-info-700 ring-info-600/25',
-  muted: 'bg-white text-ink-500 ring-line',
+  neutral: 'bg-white/90 text-[#5E4837] ring-[#8B6B4A]/25 backdrop-blur-md shadow-xs',
+  brand: 'bg-[#0D9488]/15 text-[#0D9488] ring-[#0D9488]/30 font-semibold shadow-xs',
+  ok: 'bg-[#93C572]/20 text-[#1E4D2B] ring-[#93C572]/40 font-semibold shadow-xs',
+  warn: 'bg-amber-100/80 text-amber-900 ring-amber-300 font-semibold shadow-xs',
+  bad: 'bg-rose-100/80 text-rose-800 ring-rose-300 font-semibold shadow-xs',
+  info: 'bg-[#0D9488]/15 text-[#0F5143] ring-[#0D9488]/30 font-semibold shadow-xs',
+  muted: 'bg-[#F5F0E6] text-[#8B6B4A] ring-[#8B6B4A]/20',
 };
 
 export function Badge({ tone = 'neutral', icon, children, className, title }: { tone?: Tone; icon?: ReactNode; children: ReactNode; className?: string; title?: string }) {
   return (
-    <span title={title} className={cn('inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[12px] font-medium ring-1 ring-inset', tones[tone], className)}>
+    <span title={title} className={cn('inline-flex max-w-full items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[12px] font-medium ring-1 ring-inset', tones[tone], className)}>
       {icon}
       <span className="truncate">{children}</span>
     </span>
@@ -73,8 +73,9 @@ const STATUS_META: Record<CaseStatus, { tone: Tone; icon: ReactNode }> = {
 
 export function StatusBadge({ status, className }: { status: CaseStatus; className?: string }) {
   const m = STATUS_META[status];
+  const active = !['CLOSED', 'CANCELLED', 'DISPENSED'].includes(status);
   return (
-    <Badge tone={m.tone} icon={m.icon} className={className}>
+    <Badge tone={m.tone} icon={m.icon} className={cn(active && 'animate-[pulse_3s_cubic-bezier(0.4,0,0.6,1)_infinite]', className)}>
       {STATUS_LABELS[status]}
     </Badge>
   );

@@ -1,15 +1,12 @@
-// Hand-rolled, dependency-free charts. Palette: one hue (brand teal) — brand-400 / brand-800 for the
-// two-series weekly chart (validated ordinal pair: monotone lightness, light end 2.45:1 on white),
-// brand-600 for single-series bars. Text always wears ink tokens, never the series colour.
-// Every chart ships: a title (figcaption), a legend for 2+ series, hover + keyboard-focus tooltips,
-// and an sr-only table so no value is gated behind hover.
+// Hand-rolled, dependency-free charts with Cadabra medical styling & smooth bar growth animations.
 import { useId, useState, type ReactNode } from 'react';
+import { motion } from 'motion/react';
 import { cn } from '@/lib/format';
 
 export const fadeUp = (i = 0) => ({
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, delay: 0.05 * i, ease: 'easeOut' as const },
+  initial: { opacity: 0, y: 15, scale: 0.98 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  transition: { duration: 0.45, delay: 0.05 * i, ease: [0.16, 1, 0.3, 1] as const },
 });
 
 /** Clean integer ticks (0, 5, 10 …) for small counts. */
@@ -27,14 +24,14 @@ function ChartFigure({ title, description, children, footnote }: { title: string
   const titleId = useId();
   return (
     <figure aria-labelledby={titleId} className="flex h-full flex-col">
-      <figcaption className="border-b border-line px-5 py-3.5">
-        <h3 id={titleId} className="text-[15px] font-semibold text-ink-900">
+      <figcaption className="border-b border-[#8B6B4A]/15 px-6 py-4 bg-white/40">
+        <h3 id={titleId} className="text-[16px] font-bold text-[#2D2118]">
           {title}
         </h3>
-        {description && <p className="mt-0.5 text-[13px] text-ink-500">{description}</p>}
+        {description && <p className="mt-1 text-[13px] text-[#5E4837] font-medium">{description}</p>}
       </figcaption>
-      <div className="flex-1 px-5 py-4">{children({ titleId })}</div>
-      {footnote && <p className="border-t border-line px-5 py-2.5 text-[12px] text-ink-500">{footnote}</p>}
+      <div className="flex-1 px-6 py-5">{children({ titleId })}</div>
+      {footnote && <p className="border-t border-[#8B6B4A]/15 px-6 py-3 text-[12px] text-[#8B6B4A] font-medium bg-white/30">{footnote}</p>}
     </figure>
   );
 }
@@ -48,8 +45,8 @@ export interface WeeklyPoint {
 }
 
 const SERIES = [
-  { key: 'resolved' as const, label: 'Resolved', swatch: 'bg-brand-400', line: 'bg-brand-400' },
-  { key: 'within48h' as const, label: 'Resolved within 48 h', swatch: 'bg-brand-800', line: 'bg-brand-800' },
+  { key: 'resolved' as const, label: 'Resolved', swatch: 'bg-[#93C572]', line: 'bg-[#93C572]' },
+  { key: 'within48h' as const, label: 'Resolved within 48 h', swatch: 'bg-[#0D9488]', line: 'bg-[#0D9488]' },
 ];
 
 export function WeeklyColumnChart({ data, title, description, footnote }: { data: WeeklyPoint[]; title: string; description?: ReactNode; footnote?: ReactNode }) {
@@ -62,10 +59,10 @@ export function WeeklyColumnChart({ data, title, description, footnote }: { data
     <ChartFigure title={title} description={description} footnote={footnote}>
       {({ titleId }) => (
         <>
-          <ul className="mb-3 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px] text-ink-600" aria-label="Legend">
+          <ul className="mb-4 flex flex-wrap gap-x-5 gap-y-1.5 text-[12.5px] font-semibold text-[#5E4837]" aria-label="Legend">
             {SERIES.map((s) => (
-              <li key={s.key} className="flex items-center gap-1.5">
-                <span className={cn('size-2.5 rounded-[3px]', s.swatch)} aria-hidden />
+              <li key={s.key} className="flex items-center gap-2">
+                <span className={cn('size-3 rounded-full shadow-sm', s.swatch)} aria-hidden />
                 {s.label}
               </li>
             ))}
@@ -73,7 +70,7 @@ export function WeeklyColumnChart({ data, title, description, footnote }: { data
 
           <div className="flex gap-2">
             {/* y-axis */}
-            <div className="relative h-48 w-7 shrink-0 text-right text-[11px] tabular-nums text-ink-400" aria-hidden>
+            <div className="relative h-48 w-8 shrink-0 text-right text-[11px] font-semibold tabular-nums text-[#8B6B4A]" aria-hidden>
               {ticks.map((t) => (
                 <span key={t} className="absolute right-0 translate-y-1/2 leading-none" style={{ bottom: `${pct(t)}%` }}>
                   {t}
@@ -82,9 +79,9 @@ export function WeeklyColumnChart({ data, title, description, footnote }: { data
             </div>
             <div className="min-w-0 flex-1">
               <div className="relative h-48" onMouseLeave={() => setActive(null)}>
-                {/* recessive hairline grid */}
+                {/* hairline grid */}
                 {ticks.map((t) => (
-                  <div key={t} className={cn('absolute inset-x-0 h-px', t === 0 ? 'bg-line-strong' : 'bg-ice-200')} style={{ bottom: `${pct(t)}%` }} aria-hidden />
+                  <div key={t} className={cn('absolute inset-x-0 h-px', t === 0 ? 'bg-[#8B6B4A]/25' : 'bg-[#8B6B4A]/10')} style={{ bottom: `${pct(t)}%` }} aria-hidden />
                 ))}
                 <div className="relative flex h-full items-stretch">
                   {data.map((d, i) => {
@@ -100,17 +97,19 @@ export function WeeklyColumnChart({ data, title, description, footnote }: { data
                         onMouseEnter={() => setActive(i)}
                         onFocus={() => setActive(i)}
                         onBlur={() => setActive((a) => (a === i ? null : a))}
-                        className={cn('relative flex h-full min-w-0 flex-1 cursor-default items-end justify-center gap-[2px] rounded-md px-[6%] outline-offset-0 transition-colors', isActive && 'bg-brand-50/70')}
+                        className={cn('relative flex h-full min-w-0 flex-1 cursor-default items-end justify-center gap-1 rounded-2xl px-[6%] outline-offset-0 transition-colors', isActive && 'bg-[#93C572]/15')}
                       >
                         {SERIES.map((s) => (
-                          <div
+                          <motion.div
                             key={s.key}
-                            className={cn('w-full max-w-6 rounded-t-[4px] transition-[opacity,height] duration-500 ease-out', s.swatch, dim && 'opacity-40')}
-                            style={{ height: `${pct(d[s.key])}%` }}
+                            initial={{ height: 0 }}
+                            animate={{ height: `${pct(d[s.key])}%` }}
+                            transition={{ duration: 0.8, ease: 'easeOut', delay: i * 0.05 }}
+                            className={cn('w-full max-w-6 rounded-t-lg shadow-sm transition-opacity duration-300', s.swatch, dim && 'opacity-40')}
                           />
                         ))}
                         {i === last && !isActive && (
-                          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-medium tabular-nums text-ink-700" style={{ bottom: `calc(${top}% + 4px)` }} aria-hidden>
+                          <span className="pointer-events-none absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold tabular-nums text-[#0D9488]" style={{ bottom: `calc(${top}% + 4px)` }} aria-hidden>
                             {d.within48h}/{d.resolved}
                           </span>
                         )}
@@ -118,20 +117,20 @@ export function WeeklyColumnChart({ data, title, description, footnote }: { data
                           <div
                             role="tooltip"
                             className={cn(
-                              'pointer-events-none absolute z-10 w-max min-w-36 rounded-lg border border-line bg-white px-3 py-2 text-left shadow-[var(--shadow-lift)]',
+                              'pointer-events-none absolute z-20 w-max min-w-36 rounded-2xl border border-white/90 bg-white/95 backdrop-blur-xl px-3.5 py-2.5 text-left shadow-[0_12px_28px_rgba(139,107,74,0.15)]',
                               i === 0 ? 'left-0' : i === last ? 'right-0' : 'left-1/2 -translate-x-1/2',
                             )}
-                            style={{ bottom: `calc(${Math.min(top, 70)}% + 10px)` }}
+                            style={{ bottom: `calc(${Math.min(top, 70)}% + 12px)` }}
                           >
-                            <p className="mb-1 text-[11.5px] font-medium text-ink-500">{d.week === 'This week' ? 'This week (live)' : `Week of ${d.week}`}</p>
+                            <p className="mb-1 text-[11.5px] font-bold text-[#8B6B4A]">{d.week === 'This week' ? 'This week (live)' : `Week of ${d.week}`}</p>
                             {SERIES.map((s) => (
-                              <p key={s.key} className="flex items-center gap-2 text-[12.5px]">
-                                <span className={cn('h-0.5 w-3 rounded-full', s.line)} aria-hidden />
-                                <span className="font-semibold tabular-nums text-ink-900">{d[s.key]}</span>
-                                <span className="text-ink-500">{s.label.toLowerCase()}</span>
+                              <p key={s.key} className="flex items-center gap-2 text-[12.5px] font-medium">
+                                <span className={cn('h-1 w-3 rounded-full', s.line)} aria-hidden />
+                                <span className="font-bold tabular-nums text-[#2D2118]">{d[s.key]}</span>
+                                <span className="text-[#5E4837]">{s.label.toLowerCase()}</span>
                               </p>
                             ))}
-                            <p className="mt-1 border-t border-line pt-1 text-[11.5px] text-ink-500">{d.resolved ? `${Math.round((d.within48h / d.resolved) * 100)}% within 48 h` : 'No resolved cases'}</p>
+                            <p className="mt-1 border-t border-[#8B6B4A]/15 pt-1 text-[11.5px] font-semibold text-[#0D9488]">{d.resolved ? `${Math.round((d.within48h / d.resolved) * 100)}% within 48 h` : 'No resolved cases'}</p>
                           </div>
                         )}
                       </div>
@@ -140,9 +139,9 @@ export function WeeklyColumnChart({ data, title, description, footnote }: { data
                 </div>
               </div>
               {/* x-axis */}
-              <div className="mt-1.5 flex" aria-hidden>
+              <div className="mt-2 flex" aria-hidden>
                 {data.map((d) => (
-                  <span key={d.week} className="min-w-0 flex-1 px-0.5 text-center text-[10.5px] leading-tight text-ink-500 sm:text-[11px]">
+                  <span key={d.week} className="min-w-0 flex-1 px-0.5 text-center text-[10.5px] font-semibold leading-tight text-[#8B6B4A] sm:text-[11px]">
                     {d.week}
                   </span>
                 ))}
@@ -178,9 +177,7 @@ export function WeeklyColumnChart({ data, title, description, footnote }: { data
 
 export interface HBarRow {
   key: string;
-  /** Visual label (may be a badge). */
   label: ReactNode;
-  /** Plain-text label for tooltips / screen readers. */
   text: string;
   value: number;
 }
@@ -193,8 +190,8 @@ export function HBarChart({ rows, title, description, unit = 'cases', footnote }
   return (
     <ChartFigure title={title} description={description} footnote={footnote}>
       {() => (
-        <ul className="space-y-1" onMouseLeave={() => setActive(null)}>
-          {rows.map((r) => {
+        <ul className="space-y-1.5" onMouseLeave={() => setActive(null)}>
+          {rows.map((r, i) => {
             const isActive = active === r.key;
             const dim = active !== null && !isActive;
             const share = Math.round((r.value / total) * 100);
@@ -205,16 +202,18 @@ export function HBarChart({ rows, title, description, unit = 'cases', footnote }
                 onMouseEnter={() => setActive(r.key)}
                 onFocus={() => setActive(r.key)}
                 onBlur={() => setActive((a) => (a === r.key ? null : a))}
-                className={cn('relative grid grid-cols-1 gap-1 rounded-lg px-2 py-1.5 transition-colors sm:grid-cols-[minmax(0,10.5rem)_minmax(0,1fr)] sm:items-center sm:gap-3', isActive && 'bg-brand-50/70')}
+                className={cn('relative grid grid-cols-1 gap-1 rounded-2xl px-2.5 py-2 transition-colors sm:grid-cols-[minmax(0,10.5rem)_minmax(0,1fr)] sm:items-center sm:gap-3', isActive && 'bg-[#93C572]/15')}
               >
-                <span className="min-w-0 truncate text-[13px] text-ink-700">{r.label}</span>
-                <span className="flex min-w-0 items-center gap-2">
-                  <span
-                    className={cn('h-2.5 flex-none rounded-r-[4px] bg-brand-600 transition-[opacity,width] duration-500 ease-out', dim && 'opacity-40')}
-                    style={{ width: `max(2px, calc((100% - 3.5rem) * ${r.value / max}))` }}
+                <span className="min-w-0 truncate text-[13px] font-semibold text-[#2D2118]">{r.label}</span>
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <motion.span
+                    initial={{ width: 0 }}
+                    animate={{ width: `max(4px, calc((100% - 3.5rem) * ${r.value / max}))` }}
+                    transition={{ duration: 0.8, ease: 'easeOut', delay: i * 0.05 }}
+                    className={cn('h-3 flex-none rounded-full bg-gradient-to-r from-[#0D9488] to-[#93C572] shadow-sm transition-opacity duration-300', dim && 'opacity-40')}
                     aria-hidden
                   />
-                  <span className="text-[12.5px] font-medium tabular-nums text-ink-900">
+                  <span className="text-[12.5px] font-bold tabular-nums text-[#2D2118]">
                     {r.value}
                     <span className="sr-only">
                       {' '}
@@ -223,8 +222,8 @@ export function HBarChart({ rows, title, description, unit = 'cases', footnote }
                   </span>
                 </span>
                 {isActive && (
-                  <span className="pointer-events-none absolute -top-7 right-2 z-10 whitespace-nowrap rounded-md border border-line bg-white px-2 py-1 text-[11.5px] text-ink-600 shadow-[var(--shadow-soft)]" aria-hidden>
-                    <span className="font-semibold text-ink-900">{r.value}</span> {unit} · {share}% of total
+                  <span className="pointer-events-none absolute -top-7 right-2 z-20 whitespace-nowrap rounded-xl border border-white/90 bg-white/95 backdrop-blur-xl px-2.5 py-1 text-[11.5px] font-medium text-[#5E4837] shadow-[0_8px_20px_rgba(139,107,74,0.12)]" aria-hidden>
+                    <span className="font-bold text-[#0D9488]">{r.value}</span> {unit} · {share}% of total
                   </span>
                 )}
               </li>

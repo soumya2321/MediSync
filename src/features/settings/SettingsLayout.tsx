@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { motion } from 'motion/react';
 import { Building2, ClipboardCheck, ScrollText, SlidersHorizontal, UserRound, Users } from 'lucide-react';
 import { can } from '@shared/domain/permissions.ts';
 import type { Role } from '@shared/types.ts';
@@ -47,32 +46,26 @@ export default function SettingsLayout() {
             <span className="font-bold">Settings</span>
           </>
         }
-        description="Your account, your organisation and how RefillBridge behaves for your team."
+        description="Your account, your organisation and how MediSync behaves for your team."
       />
-      <nav aria-label="Settings" className="-mx-4 mb-6 overflow-x-auto border-b border-line px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
-        <ul className="flex min-w-max gap-1">
+      <nav aria-label="Settings" className="-mx-4 mb-8 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0">
+        <div className="inline-flex rounded-2xl bg-white/80 p-1.5 border border-white/90 backdrop-blur-md shadow-xs gap-1">
           {tabs.map((t) => (
-            <li key={t.to}>
-              <NavLink
-                to={t.to}
-                className={({ isActive }) =>
-                  cn(
-                    'relative flex items-center gap-2 whitespace-nowrap rounded-t-md px-3 py-2.5 text-sm font-medium transition-colors',
-                    isActive ? 'text-brand-800' : 'text-ink-500 hover:text-ink-900',
-                  )
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    {t.icon}
-                    {t.label}
-                    {isActive && <motion.span layoutId="settings-tab" className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-brand-600" aria-hidden />}
-                  </>
-                )}
-              </NavLink>
-            </li>
+            <NavLink
+              key={t.to}
+              to={t.to}
+              className={({ isActive }) =>
+                cn(
+                  'relative flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200',
+                  isActive ? 'bg-gradient-to-r from-[#0D9488] to-[#14B8A6] text-white shadow-xs' : 'text-[#5E4837] hover:bg-white/90 hover:text-[#0D9488]',
+                )
+              }
+            >
+              {t.icon}
+              {t.label}
+            </NavLink>
           ))}
-        </ul>
+        </div>
       </nav>
       <div className="min-w-0">
         <Outlet />

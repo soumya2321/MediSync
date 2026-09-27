@@ -61,9 +61,9 @@ export function NotesTab({ detail }: { detail: PracticeCaseDetail }) {
         <ul className="space-y-2">
           <AnimatePresence initial={false}>
             {detail.notes.map((n) => (
-              <motion.li key={n.id} layout initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={cn('rounded-xl border border-line bg-white p-3.5', n.id.startsWith('tmp-') && 'opacity-60')}>
-                <p className="whitespace-pre-wrap text-sm text-ink-800">{n.body}</p>
-                <p className="mt-1.5 text-[12px] text-ink-400">
+              <motion.li key={n.id} layout initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} className={cn('rounded-2xl border border-white/95 bg-white/90 backdrop-blur-md p-3.5 shadow-sm', n.id.startsWith('tmp-') && 'opacity-60')}>
+                <p className="whitespace-pre-wrap text-sm text-[#2D2118] font-medium">{n.body}</p>
+                <p className="mt-1.5 text-[12px] text-[#8B6B4A]">
                   {n.authorName} · {timeAgo(n.createdAt)}
                 </p>
               </motion.li>
@@ -85,16 +85,16 @@ export function TasksTab({ detail }: { detail: PracticeCaseDetail }) {
     onSuccess: () => invalidate(detail.case.id),
     onError: (e) => toast.error("Couldn't update the task", friendlyMessage(e)),
   });
-  if (detail.tasks.length === 0) return <EmptyState icon={<CheckCircle2 className="size-6" />} title="No tasks" description="Human work items (call the pharmacy, book a visit…) appear here." />;
+  if (detail.tasks.length === 0) return <EmptyState icon={<CheckCircle2 className="size-6 text-[#0D9488]" />} title="No tasks" description="Human work items (call the pharmacy, book a visit…) appear here." />;
   return (
     <ul className="space-y-2">
       {detail.tasks.map((t) => (
-        <li key={t.id} className={cn('flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-white p-3.5', t.status === 'open' ? 'border-line' : 'border-line opacity-60')}>
+        <li key={t.id} className={cn('flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-white/90 backdrop-blur-md p-3.5 shadow-sm', t.status === 'open' ? 'border-white/95' : 'border-white/70 opacity-60')}>
           <div className="flex min-w-0 items-start gap-2.5">
-            {t.status === 'open' ? <CircleDashed className="mt-0.5 size-4 shrink-0 text-warn-600" aria-hidden /> : <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-ok-600" aria-hidden />}
+            {t.status === 'open' ? <CircleDashed className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden /> : <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-[#0D9488]" aria-hidden />}
             <div className="min-w-0">
-              <p className={cn('text-sm font-medium', t.status !== 'open' && 'line-through')}>{t.title}</p>
-              <p className="text-[12px] text-ink-500">
+              <p className={cn('text-sm font-bold text-[#2D2118]', t.status !== 'open' && 'line-through text-[#8B6B4A]')}>{t.title}</p>
+              <p className="text-[12px] text-[#8B6B4A]">
                 {t.status === 'open' ? `Due ${dueIn(t.dueAt)}` : 'Done'} · {t.assigneeName ?? 'Team queue'}
               </p>
             </div>
@@ -165,19 +165,19 @@ export function MessagesTab({ detail }: { detail: PracticeCaseDetail }) {
   if (!patient) return <EmptyState icon={<MessageSquare className="size-6" />} title="Confirm the patient first" description="We never message someone until their identity is confirmed." />;
   return (
     <div className="space-y-5">
-      <div className="rounded-xl border border-line bg-ice-50 p-4">
+      <div className="rounded-3xl border border-white/95 bg-white/90 p-5 shadow-sm">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm font-medium text-ink-900">Send an update</p>
+          <p className="text-sm font-bold text-[#2D2118]">Send an update</p>
           <div className="flex flex-wrap items-center gap-2">
             {patient.smsOptOut && <Badge tone="warn" icon={<AlertTriangle className="size-3.5" />}>SMS opted out — email only</Badge>}
-            <Button size="sm" variant="subtle" icon={<Sparkles className="size-4" />} loading={draft.isPending} onClick={() => draft.mutate()}>
+            <Button size="sm" variant="subtle" icon={<Sparkles className="size-4 text-[#0D9488]" />} loading={draft.isPending} onClick={() => draft.mutate()}>
               Draft with AI
             </Button>
           </div>
         </div>
-        <div className="mb-3 flex gap-1 rounded-lg bg-white p-1 ring-1 ring-line" role="radiogroup" aria-label="Message type">
+        <div className="mb-3 flex gap-1 rounded-xl bg-white/80 p-1 border border-[#8B6B4A]/20" role="radiogroup" aria-label="Message type">
           {(['template', 'free'] as const).map((m) => (
-            <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => setMode(m)} className={cn('flex-1 rounded-md px-3 py-1.5 text-[13px] font-medium transition', mode === m ? 'bg-brand-700 text-white' : 'text-ink-600 hover:bg-ice-100')}>
+            <button key={m} type="button" role="radio" aria-checked={mode === m} onClick={() => setMode(m)} className={cn('flex-1 rounded-lg px-3 py-1.5 text-[13px] font-bold transition-colors', mode === m ? 'bg-[#0D9488] text-white shadow-xs' : 'text-[#5E4837] hover:bg-white')}>
               {m === 'template' ? 'Template (sends automatically)' : 'Free text (needs review)'}
             </button>
           ))}
@@ -193,12 +193,12 @@ export function MessagesTab({ detail }: { detail: PracticeCaseDetail }) {
         ) : (
           <div className="space-y-3">
             <Textarea label="Message" value={text} onChange={(e) => setText(e.target.value)} maxLength={300} hint={`${text.length}/300 · No drug names or clinical details in SMS.`} />
-            {aiId && <p className="text-[12px] text-info-700">Drafted by Demo AI (mock) from status + clinic name only. Edit freely.</p>}
+            {aiId && <p className="text-[12px] font-semibold text-[#0D9488]">Drafted by Demo AI (mock) from status + clinic name only. Edit freely.</p>}
             <Checkbox label="I reviewed this message" description="Free-text and AI-drafted messages always need a person to approve them." checked={reviewed} onChange={(e) => setReviewed(e.target.checked)} />
           </div>
         )}
         <div className="mt-3 flex justify-end">
-          <Button size="sm" icon={<Send className="size-4" />} loading={send.isPending} disabled={mode === 'free' && (!text.trim() || !reviewed)} onClick={() => send.mutate()}>
+          <Button size="sm" variant="glow" icon={<Send className="size-4" />} loading={send.isPending} disabled={mode === 'free' && (!text.trim() || !reviewed)} onClick={() => send.mutate()}>
             Send to patient
           </Button>
         </div>

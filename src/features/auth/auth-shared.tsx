@@ -15,16 +15,16 @@ export function safeNext(next: string | null | undefined): string | null {
 
 type Tone = 'error' | 'info' | 'success' | 'warning';
 const toneStyles: Record<Tone, string> = {
-  error: 'border-bad-600/25 bg-bad-50 text-bad-700',
-  info: 'border-info-600/20 bg-info-50 text-info-700',
-  success: 'border-ok-600/25 bg-ok-50 text-ok-700',
-  warning: 'border-warn-600/25 bg-warn-50 text-warn-700',
+  error: 'border-rose-200 bg-rose-50/95 text-rose-800',
+  info: 'border-[#0D9488]/30 bg-[#0D9488]/10 text-[#0F5143]',
+  success: 'border-emerald-200 bg-emerald-50/95 text-emerald-800',
+  warning: 'border-amber-200 bg-amber-50/95 text-amber-900',
 };
 const toneIcons: Record<Tone, ReactNode> = {
-  error: <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />,
-  info: <Info className="mt-0.5 size-4 shrink-0" aria-hidden />,
-  success: <CheckCircle2 className="mt-0.5 size-4 shrink-0" aria-hidden />,
-  warning: <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />,
+  error: <AlertCircle className="mt-0.5 size-4 shrink-0 text-rose-600" aria-hidden />,
+  info: <Info className="mt-0.5 size-4 shrink-0 text-[#0D9488]" aria-hidden />,
+  success: <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-600" aria-hidden />,
+  warning: <AlertCircle className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden />,
 };
 
 /** Form-level message. Errors use role="alert", everything else role="status". */
@@ -34,7 +34,7 @@ export function FormAlert({ tone, children, className }: { tone: Tone; children:
       initial={{ opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
       role={tone === 'error' ? 'alert' : 'status'}
-      className={cn('flex items-start gap-2 rounded-xl border px-3.5 py-2.5 text-[13.5px] leading-snug', toneStyles[tone], className)}
+      className={cn('flex items-start gap-2 rounded-2xl border px-3.5 py-2.5 text-[13.5px] leading-snug font-medium shadow-xs', toneStyles[tone], className)}
     >
       {toneIcons[tone]}
       <div className="min-w-0">{children}</div>
@@ -55,7 +55,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(fu
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? 'Hide password' : 'Show password'}
         aria-pressed={visible}
-        className="absolute right-1.5 top-[30px] flex size-8 items-center justify-center rounded-md text-ink-500 transition-colors hover:bg-brand-50 hover:text-brand-800"
+        className="absolute right-1.5 top-[30px] flex size-8 items-center justify-center rounded-lg text-[#8B6B4A] transition-colors hover:bg-white hover:text-[#0D9488]"
       >
         {visible ? <EyeOff className="size-4" aria-hidden /> : <Eye className="size-4" aria-hidden />}
       </button>
@@ -71,10 +71,10 @@ export function PasswordChecklist({ password, email, name, id }: { password: str
     { id: 'personal', label: 'Must not contain your email or name', ok: password.length > 0 && !issues.has('Must not contain your email') && !issues.has('Must not contain your name') },
   ];
   return (
-    <ul id={id} aria-label="Password requirements" className="grid grid-cols-1 gap-x-4 gap-y-1.5 rounded-xl border border-line bg-ice-50/80 p-3 sm:grid-cols-2">
+    <ul id={id} aria-label="Password requirements" className="grid grid-cols-1 gap-x-4 gap-y-1.5 rounded-2xl border border-[#8B6B4A]/20 bg-white/90 p-3.5 sm:grid-cols-2 backdrop-blur-md shadow-xs">
       {rules.map((r) => (
-        <li key={r.id} className={cn('flex items-center gap-1.5 text-[12.5px] transition-colors', r.ok ? 'text-ok-700' : 'text-ink-500')}>
-          <span className={cn('flex size-4 shrink-0 items-center justify-center rounded-full transition-colors', r.ok ? 'bg-ok-600 text-white' : 'bg-ice-200 text-ink-500')} aria-hidden>
+        <li key={r.id} className={cn('flex items-center gap-1.5 text-[12.5px] font-medium transition-colors', r.ok ? 'text-emerald-800' : 'text-[#8B6B4A]')}>
+          <span className={cn('flex size-4 shrink-0 items-center justify-center rounded-full transition-colors', r.ok ? 'bg-[#0D9488] text-white shadow-xs' : 'bg-[#F5F0E6] text-[#8B6B4A] border border-[#8B6B4A]/20')} aria-hidden>
             {r.ok ? <Check className="size-3" strokeWidth={3} /> : <X className="size-3" strokeWidth={2.5} />}
           </span>
           <span>
@@ -101,16 +101,17 @@ export const Honeypot = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInp
 
 /** Centered success / info panel used after a form completes. */
 export function ResultPanel({ icon, title, children, tone = 'ok' }: { icon: ReactNode; title: string; children?: ReactNode; tone?: 'ok' | 'bad' | 'brand' }) {
-  const ring = tone === 'ok' ? 'bg-ok-50 text-ok-600' : tone === 'bad' ? 'bg-bad-50 text-bad-600' : 'bg-brand-50 text-brand-600';
-  const pulse = tone === 'ok' ? 'bg-ok-50' : tone === 'bad' ? 'bg-bad-50' : 'bg-brand-100';
+  const ring = tone === 'ok' ? 'bg-[#0D9488]/15 text-[#0D9488] border border-[#0D9488]/30' : tone === 'bad' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-gradient-to-br from-[#0D9488] to-[#93C572] text-white shadow-sm';
+  const pulse = tone === 'ok' ? 'bg-[#0D9488]/20' : tone === 'bad' ? 'bg-rose-500/20' : 'bg-[#0D9488]/20';
   return (
     <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center" role="status">
-      <div className={cn('relative mb-4 flex size-14 items-center justify-center rounded-2xl', ring)}>
+      <div className={cn('relative mb-4 flex size-14 items-center justify-center rounded-2xl shadow-sm', ring)}>
         <span className={cn('absolute inset-0 animate-pulse-ring rounded-2xl', pulse)} aria-hidden />
         <span className="relative">{icon}</span>
       </div>
-      <h2 className="text-lg font-semibold text-ink-900">{title}</h2>
-      {children && <div className="mt-2 w-full text-sm leading-relaxed text-ink-600">{children}</div>}
+      <h2 className="text-xl font-display font-extrabold text-[#2D2118]">{title}</h2>
+      {children && <div className="mt-2 w-full text-sm leading-relaxed text-[#5E4837]">{children}</div>}
     </motion.div>
   );
 }
+

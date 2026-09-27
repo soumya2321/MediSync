@@ -80,7 +80,7 @@ export function CodeInput({ value, onChange, onComplete, label = '6-digit code',
 
   return (
     <fieldset aria-describedby={describedBy}>
-      <legend className="mb-2 text-[13px] font-medium text-ink-700">{label}</legend>
+      <legend className="mb-2 text-[13px] font-medium text-[#5E4837]">{label}</legend>
       <div className="flex justify-between gap-1.5 sm:gap-2.5">
         {digits.map((d, i) => (
           <input
@@ -108,19 +108,19 @@ export function CodeInput({ value, onChange, onComplete, label = '6-digit code',
             onKeyDown={(e) => onKeyDown(i, e)}
             onPaste={onPaste}
             className={cn(
-              'h-12 w-full min-w-0 max-w-[52px] rounded-[var(--radius-input)] border bg-white text-center font-mono text-xl font-semibold text-brand-900 transition-all focus:outline-none focus:ring-4 sm:h-14 sm:text-2xl',
-              error ? 'border-bad-600 focus:ring-bad-50' : d ? 'border-brand-400 focus:border-brand-500 focus:ring-brand-100' : 'border-line-strong focus:border-brand-500 focus:ring-brand-100',
+              'h-12 w-full min-w-0 max-w-[52px] rounded-2xl border bg-white/90 text-center font-mono text-xl font-bold text-[#2D2118] backdrop-blur-md transition-all focus:outline-none focus:ring-4 sm:h-14 sm:text-2xl shadow-xs',
+              error ? 'border-rose-400 focus:ring-rose-500/20' : d ? 'border-[#0D9488] focus:border-[#0D9488] focus:ring-[#0D9488]/20 ring-1 ring-[#0D9488]/30 shadow-[0_0_12px_rgba(13,148,136,0.25)]' : 'border-[#8B6B4A]/25 focus:border-[#0D9488] focus:ring-[#0D9488]/20',
             )}
           />
         ))}
       </div>
       {error ? (
-        <p id={`${baseId}-error`} role="alert" className="mt-2 flex items-center gap-1 text-[12.5px] text-bad-700">
+        <p id={`${baseId}-error`} role="alert" className="mt-2 flex items-center gap-1 text-[12.5px] font-semibold text-rose-600">
           <AlertCircle className="size-3.5 shrink-0" aria-hidden />
           {error}
         </p>
       ) : hint ? (
-        <p id={`${baseId}-hint`} className="mt-2 text-[12.5px] text-ink-500">
+        <p id={`${baseId}-hint`} className="mt-2 text-[12.5px] font-medium text-[#8B6B4A]">
           {hint}
         </p>
       ) : null}

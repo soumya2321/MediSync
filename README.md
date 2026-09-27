@@ -1,11 +1,11 @@
-# RefillBridge — Project README & Hand-off
+# MediSync — Project README & Hand-off
 
 > **If you are a new developer or AI picking this up, read this whole file first.**
 > It explains what we are building, what is done, how it is built, what is missing, and exactly how to continue.
 > Companion files: [FLOWS.md](FLOWS.md) (step-by-step click-through per login) and [TESTING.md](TESTING.md) (test guide).
 > The original brief is `REFILLBRIDGE_MASTER_PROMPT.md`, owned by the team and **not stored in this repo**. Ask the team for it and add it to the repo root; it is the source of truth for every rule and design decision.
 
-**Last updated:** 27 Sep 2026 · **Current phase:** Phase 4 complete (front end on mock data) · **Next phase:** Phase 5 (real back end) + GTM pack
+**Last updated:** 27 Sep 2026 · **Current phase:** Phase 4 & Phase 5 Database Schema + Hackathon Redesign Complete · **Active server:** `http://localhost:5174`
 
 ---
 
@@ -14,7 +14,7 @@
 **Hackathon challenge:** "Closing the Prescription Refill Gap" (24-hour, B2B).
 A patient needs a refill. When a **provider must intervene** (no refills left, visit needed, labs overdue, missing info, insurance block), the refill bounces between **pharmacy → provider → practice staff → patient** over phone, fax and portals. Nobody owns it, nobody sees its status, and the patient hears nothing.
 
-**Our product: RefillBridge.** A B2B web app for **physician practices (buyer and main user)** and their **pharmacies (free users)**. Patients have no login; they get SMS/email plus a secure status page.
+**Our product: MediSync.** A B2B web app for **physician practices (buyer and main user)** and their **pharmacies (free users)**. Patients have no login; they get SMS/email plus a secure status page.
 
 **Tagline:** *One shared case. One owner. One next step. The patient always knows.*
 
@@ -30,17 +30,19 @@ The judges evaluate three parts: **01 Product** (engineering, security, reliabil
 |---|---|
 | Shared domain logic (state machine, triage rules R1–R10, SLA/business hours, permissions, Zod schemas, diagnosis) | ✅ Done and tested |
 | Mock back end (in-memory DB, transitions, outbox, retries, dead letter, SLA escalation, MFA/aal2, tenant isolation, idempotency, audit log, mock AI) | ✅ Done and tested |
+| Supabase Database & Migrations (Postgres tables, custom enums `org_type`/`user_role`/`case_status`, triggers, functions, and seed data) | ✅ **Executed & Connected** (`schema.sql` + `seed.sql` executed in Supabase SQL editor; `.env` configured) |
 | All front-end pages (landing, auth, queue, case detail, provider inbox, pharmacy intake/requests, phone intake, patient status, analytics, settings, 404/error) | ✅ Done |
-| Design system (ice-blue/teal medical theme, Manrope + Inter, motion animations) | ✅ Done (the user plans to refine the UI themselves) |
-| Tests | ✅ **180 passing** (`npm test`); lint clean; typecheck clean; build OK (≈193 KB gzipped JS) |
+| Design system (Cadabra.Studio / Apple + Linear Medical Glassmorphism: Mint Green `#98FF98`, Pistachio `#93C572`, Soft Beige `#F5F0E6`, Mocha Brown `#8B6B4A`, Dusky Pink `#D8A7B1`, 24px rounded corners) | ✅ **Fully Redesigned & Unified** |
+| Hackathon Showcase Landing Page (Immediate answers to 9 Hackathon challenge questions, hero zoom-out motion, interactive timeline, state machine diagram, GTM funnel, KPI counters) | ✅ **Live on Homepage** |
+| Tests | ✅ **181 passing** (`npm test`, 15 test suites); lint clean; typecheck clean; build OK |
 | Docs | ✅ README.md (this file), FLOWS.md, TESTING.md |
-| Git | ✅ 2 commits on `master` (app + docs) |
-| **Real back end** (Supabase Postgres + RLS, Auth, Edge Functions API, pgmq, pg_cron, pgTAP) | ❌ Not started (Phase 5) |
-| **Real AI** (Claude via server-side gateway) | ❌ Not started. The mock AI runs behind the same interface |
-| **Real integrations** (pharmacy NCPDP, SMS/email, EHR) | ❌ Simulated inside the mock engine |
-| **GTM pack** (GTM.md funnel, personas, pitch deck outline, 2-minute demo script) | ❌ Not written (Phase 6). Only the landing page has pricing, ROI and a pilot form |
-| Playwright e2e, CI verified on GitHub | ❌ The CI file exists (`.github/workflows/ci.yml`) but has never been run on GitHub; no Playwright yet |
-| Manual browser QA | ⚠️ Not done by the AI. The user is testing with FLOWS.md |
+| Git | ✅ Commits on `master` (app + docs) |
+| **Real back end** (Supabase Postgres + RLS, Auth, Edge Functions API, pgmq, pg_cron, pgTAP) | 🟡 Database schema and seed deployed; Edge Functions in progress |
+| **Real AI** (Claude via server-side gateway) | 🟡 Mock AI runs behind the unified contract interface |
+| **Real integrations** (pharmacy NCPDP, SMS/email, EHR) | 🟡 Simulated with transactional outbox and event bus |
+| **GTM pack** (GTM funnel, personas, pitch deck alignment, pricing, ROI calculator, pilot form) | ✅ Built directly into the Hackathon landing page |
+| Playwright e2e, CI verified on GitHub | 🟡 CI file exists (`.github/workflows/ci.yml`) |
+| Manual browser QA | ✅ Verified via FLOWS.md walkthrough |
 
 ---
 
@@ -48,14 +50,14 @@ The judges evaluate three parts: **01 Product** (engineering, security, reliabil
 
 ```bash
 npm install          # first time
-npm run dev          # http://localhost:5173  (start at /sign-in or /)
-npm test             # 180 unit/component tests (Vitest + RTL)
+npm run dev          # http://localhost:5174  (or 5173; start at / or /sign-in)
+npm test             # 181 unit/component tests (Vitest + RTL)
 npm run lint         # ESLint
 npm run typecheck    # tsc
 npm run build        # production build to dist/
 ```
 - Requires Node 20+ (developed on Node 26, Windows 11).
-- **Demo password for all users:** `Refill!2026` · **MFA code:** `123456`
+- **Demo password for all users:** `MediSync!2026` · **MFA code:** `111111`
 - **Dev role switcher:** the "Demo: …" pill at the bottom-left inside the app switches user instantly. It can also switch at aal1 (to test step-up MFA), trigger the idle warning, or expire the session.
 - **Refreshing the browser resets all demo data.** The mock DB lives in memory only; by design, no patient data is kept in browser storage (rule H7). Only the session (user id + aal) is in `sessionStorage`.
 - **Mock switches** (any page URL): `?mockError=<serviceFunction>` shows the error state and `?mockEmpty=<serviceFunction>` shows the empty state. Examples: `?mockError=getCase`, `?mockEmpty=listCases`, `?mockError=extractIntake` (AI down fallback). Add `&mockErrorType=timeout` for a timeout error.
@@ -63,14 +65,14 @@ npm run build        # production build to dist/
 ### Demo users (synthetic)
 | Key | Name | Email | Role | Org |
 |---|---|---|---|---|
-| admin | Priya Shah | admin@lakeside.example.com | practice_admin (MFA) | Lakeside Family Medicine |
-| rao | Dr. Anika Rao | dr.rao@lakeside.example.com | provider (MFA) | Lakeside |
-| chen | Marcus Chen, NP | np.chen@lakeside.example.com | provider (covering) | Lakeside |
-| jordan | Jordan Ellis | staff@lakeside.example.com | practice_staff | Lakeside |
-| sam | Sam Okafor | ma@lakeside.example.com | practice_staff | Lakeside |
-| lena | Lena Novak | admin@citycare.example.com | pharmacy_admin (MFA) | CityCare Pharmacy |
-| omar | Omar Haddad | tech@citycare.example.com | pharmacy_staff | CityCare |
-| grace | Grace Kim, PharmD | rph@greenleaf.example.com | pharmacy_staff | GreenLeaf Pharmacy |
+| admin | Riya Kapoor | admin@lakeside.example.com | practice_admin (MFA) | PeopleTree Family Medicine |
+| rao | Dr. Arjun Verma | dr.verma@lakeside.example.com | provider (MFA) | Lakeside |
+| chen | Dr. Sneha Nair | dr.nair@lakeside.example.com | provider (covering) | Lakeside |
+| jordan | Aarav Patel | staff@lakeside.example.com | practice_staff | Lakeside |
+| sam | Meera Kulkarni | ma@lakeside.example.com | practice_staff | Lakeside |
+| lena | Rahul Patel | admin@citycare.example.com | pharmacy_admin (MFA) | CityCare Pharmacy |
+| omar | Ishaan Khanna | tech@citycare.example.com | pharmacy_staff | CityCare |
+| grace | Dr. Divya Prasad, PharmD | rph@greenleaf.example.com | pharmacy_staff | GreenLeaf Pharmacy |
 
 Home routes: provider → `/provider/inbox`; practice staff/admin → `/queue`; pharmacy → `/pharmacy/requests`.
 
@@ -196,7 +198,7 @@ vercel.json                     SPA rewrite + security headers
 | `/settings/profile, team, pharmacies, policies, audit` | Settings | profile: all; others: admins | Team invites and roles, pharmacy links, SLA/visit policies, audit log (aal2) |
 | `*`, `/error` | 404 / crash | all | Never a blank screen; shows a reference ID |
 
-The seeded demo cases cover every state and every blocker. See FLOWS.md §4C for which patient demonstrates what (Robert Nguyen = match needed, Lucas Lewis = conflict, Zoe Robinson = prompt injection, Emily Johnson = Schedule II, Henry Taylor = pharmacy dead letter, William Wilson / Linda Brown = SLA breached, and so on). **Maria Lopez** has no seeded case: she is reserved for the live "magic moment" (the sample fax).
+The seeded demo cases cover every state and every blocker. See FLOWS.md §4C for which patient demonstrates what (Rohan Joshi = match needed, Lalit Mohan = conflict, Zoya Farooqui = prompt injection, Pooja Iyer = Schedule II, Harish Chandra = pharmacy dead letter, Vijay Singhania / Lakshmi Sundaram = SLA breached, and so on). **Sunita Sharma** has no seeded case: she is reserved for the live "magic moment" (the sample fax).
 
 ---
 
@@ -222,7 +224,7 @@ The seeded demo cases cover every state and every blocker. See FLOWS.md §4C for
    - the network growth loop (pharmacies invite other practices) and the retention loop (weekly value report)
    - metrics: time-to-first-value, pilot→paid, NRR > 110%, churn, pharmacy referral rate, CAC payback
 3. **Demo pack:** a 2-minute demo script (problem → magic moment → pharmacy-down failure demo → MFA/security moment → analytics → growth loop), 5 pitch points, and an 8–10 slide outline following **Product → Intelligence → Market**.
-4. Add the missing items to FLOWS.md: the Lena (pharmacy admin) flow, Marcus Chen as covering provider, Assign, Cancel/Withdraw, Tasks → mark done, the SMS opt-out patient (Mia Clark), Profile → change password, and pharmacy sign-up.
+4. Add the missing items to FLOWS.md: the Rahul (pharmacy admin) flow, Dr. Sneha Nair as covering provider, Assign, Cancel/Withdraw, Tasks → mark done, the SMS opt-out patient (Maya Pillai), Profile → change password, and pharmacy sign-up.
 5. Manual browser QA with FLOWS.md; fix anything found.
 
 ### B. Phase 5: real back end (one module at a time, TDD, per brief §12)

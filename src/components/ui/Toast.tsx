@@ -64,15 +64,20 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: 40, transition: { duration: 0.18 } }}
               role={t.tone === 'error' ? 'alert' : 'status'}
-              className={cn('pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border bg-white/95 p-3.5 shadow-[var(--shadow-lift)] backdrop-blur', t.tone === 'error' ? 'border-bad-600/30' : 'border-line')}
+              className={cn(
+                'pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border p-4 shadow-[0_16px_40px_rgba(139,107,74,0.12)] backdrop-blur-2xl',
+                t.tone === 'error'
+                  ? 'bg-rose-50/95 border-rose-200 text-rose-900'
+                  : 'bg-white/95 border-white/95 text-[#2D2118]',
+              )}
             >
               {icons[t.tone]}
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-ink-900">{t.title}</p>
-                {t.description && <p className="mt-0.5 text-[13px] text-ink-600">{t.description}</p>}
-                {t.requestId && <p className="mt-1 font-mono text-[11px] text-ink-400">Reference: {t.requestId.slice(0, 8)}</p>}
+                <p className="text-sm font-bold text-[#2D2118]">{t.title}</p>
+                {t.description && <p className="mt-0.5 text-[13px] font-medium text-[#5E4837]">{t.description}</p>}
+                {t.requestId && <p className="mt-1 font-mono text-[11px] text-[#8B6B4A]">Reference: {t.requestId.slice(0, 8)}</p>}
               </div>
-              <button type="button" onClick={() => dismiss(t.id)} className="rounded p-0.5 text-ink-400 hover:text-ink-900" aria-label="Dismiss notification">
+              <button type="button" onClick={() => dismiss(t.id)} className="rounded-lg p-1 text-[#8B6B4A] hover:bg-[#F5F0E6] hover:text-[#2D2118] transition" aria-label="Dismiss notification">
                 <X className="size-4" />
               </button>
             </motion.div>

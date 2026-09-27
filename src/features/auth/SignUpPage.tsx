@@ -61,21 +61,21 @@ export default function SignUpPage() {
       footer={
         <>
           Already have an account?{' '}
-          <Link to="/sign-in" className="font-semibold text-brand-700 underline-offset-2 hover:underline">
+          <Link to="/sign-in" className="font-semibold text-[#0D9488] underline-offset-2 hover:underline hover:text-[#0F5143]">
             Sign in
           </Link>
         </>
       }
     >
       {done ? (
-        <ResultPanel icon={<MailCheck className="size-7" aria-hidden />} title="Check your inbox">
+        <ResultPanel icon={<MailCheck className="size-7 text-[#0D9488]" aria-hidden />} title="Check your inbox">
           <p>{done.message}</p>
           {done.demoVerifyEmail && (
-            <div className="mt-5 rounded-xl border border-dashed border-brand-300 bg-brand-50/70 p-3.5 text-left">
-              <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-600">Demo shortcut</p>
-              <p className="mt-1 text-[13px] text-ink-600">No real email is sent in the demo. Open the verification link directly:</p>
+            <div className="mt-5 rounded-2xl border border-dashed border-[#0D9488]/40 bg-[#0D9488]/10 p-4 text-left">
+              <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-[#0D9488]">Demo shortcut</p>
+              <p className="mt-1 text-[13px] text-[#5E4837]">No real email is sent in the demo. Open the verification link directly:</p>
               <Link to={`/verify-email?email=${encodeURIComponent(done.demoVerifyEmail)}`} className="mt-3 block">
-                <Button variant="subtle" className="w-full" iconRight={<ExternalLink className="size-4" aria-hidden />}>
+                <Button variant="glow" className="w-full" iconRight={<ExternalLink className="size-4" aria-hidden />}>
                   Demo: open verification link
                 </Button>
               </Link>
@@ -88,7 +88,7 @@ export default function SignUpPage() {
           <Input label="Organisation name" autoComplete="organization" leading={<Building2 className="size-4" />} error={errors.orgName?.message} {...register('orgName')} />
 
           <fieldset>
-            <legend className="mb-1.5 text-[13px] font-medium text-ink-700">Organisation type</legend>
+            <legend className="mb-1.5 text-[13px] font-bold text-[#2D2118]">Organisation type</legend>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {ORG_TYPES.map((t) => {
                 const checked = orgType === t.value;
@@ -96,19 +96,19 @@ export default function SignUpPage() {
                   <label
                     key={t.value}
                     className={cn(
-                      'relative flex cursor-pointer items-start gap-2.5 rounded-xl border bg-white p-3 transition-all hover:-translate-y-px hover:shadow-[var(--shadow-soft)] has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-brand-100',
-                      checked ? 'border-brand-500 shadow-[var(--shadow-glow)]' : 'border-line-strong',
+                      'relative flex cursor-pointer items-start gap-2.5 rounded-2xl border p-3.5 transition-all duration-200 hover:-translate-y-px has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-[#0D9488]/30',
+                      checked ? 'border-[#0D9488] bg-[#0D9488]/10 shadow-xs' : 'border-[#8B6B4A]/20 bg-white/70 hover:border-[#0D9488]/40',
                     )}
                   >
                     <input type="radio" value={t.value} className="sr-only" {...register('orgType')} />
-                    <span className={cn('flex size-8 shrink-0 items-center justify-center rounded-lg', checked ? 'bg-brand-700 text-white' : 'bg-brand-50 text-brand-700')}>
+                    <span className={cn('flex size-8 shrink-0 items-center justify-center rounded-xl transition-colors', checked ? 'bg-[#0D9488] text-white shadow-xs' : 'bg-white text-[#8B6B4A] border border-[#8B6B4A]/20')}>
                       <t.icon className="size-4" aria-hidden />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-[13.5px] font-semibold text-ink-900">{t.label}</span>
-                      <span className="block text-[12px] leading-snug text-ink-500">{t.text}</span>
+                      <span className="block text-[13.5px] font-bold text-[#2D2118]">{t.label}</span>
+                      <span className="block text-[12px] leading-snug text-[#5E4837]">{t.text}</span>
                     </span>
-                    {checked && <CheckCircle2 className="absolute right-2 top-2 size-4 text-brand-600" aria-hidden />}
+                    {checked && <CheckCircle2 className="absolute right-2 top-2 size-4 text-[#0D9488]" aria-hidden />}
                   </label>
                 );
               })}
@@ -120,10 +120,10 @@ export default function SignUpPage() {
           <PasswordInput label="Password" autoComplete="new-password" error={errors.password?.message} {...register('password')} />
           <PasswordChecklist id="signup-pw-rules" password={password} email={email} name={fullName} />
           <Honeypot {...register('website')} />
-          <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
+          <Button type="submit" variant="glow" size="lg" className="w-full" loading={isSubmitting}>
             Create account
           </Button>
-          <p className="text-center text-[12px] text-ink-500">We'll send a link to verify your email before you can sign in.</p>
+          <p className="text-center text-[12px] text-[#8B6B4A]">We'll send a link to verify your email before you can sign in.</p>
         </form>
       )}
     </AuthLayout>

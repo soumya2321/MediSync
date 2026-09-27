@@ -22,12 +22,12 @@ export function PatientMatchPanel({ detail }: { detail: PracticeCaseDetail }) {
   const list = debounced.trim().length >= 2 ? (results.data ?? []) : detail.matchCandidates;
 
   return (
-    <section aria-labelledby="match-title" className="rounded-[var(--radius-card)] border border-warn-600/30 bg-warn-50/60 p-5">
-      <h2 id="match-title" className="flex items-center gap-2 text-[15px] font-semibold text-ink-900">
-        <Users className="size-4 text-warn-600" aria-hidden /> Please confirm the patient
+    <section aria-labelledby="match-title" className="rounded-3xl border border-amber-300/80 bg-amber-50/80 backdrop-blur-xl p-5 shadow-[0_16px_40px_rgba(139,107,74,0.08)]">
+      <h2 id="match-title" className="flex items-center gap-2 text-[15px] font-bold text-[#2D2118]">
+        <Users className="size-4 text-amber-700" aria-hidden /> Please confirm the patient
       </h2>
-      <p className="mt-1 text-sm text-ink-600">
-        The pharmacy sent <strong>{req.patientFirstName} {req.patientLastName}</strong>, DOB {req.patientDob ? formatDob(req.patientDob) : '—'}
+      <p className="mt-1 text-sm text-[#5E4837]">
+        The pharmacy sent <strong className="text-[#2D2118] font-bold">{req.patientFirstName} {req.patientLastName}</strong>, DOB {req.patientDob ? formatDob(req.patientDob) : '—'}
         {req.patientPhone ? `, phone ${req.patientPhone}` : ', no phone or chart number'}. Rule R1 needs name + DOB + one more identifier for an automatic match.
       </p>
       <div className="mt-4">
@@ -35,17 +35,17 @@ export function PatientMatchPanel({ detail }: { detail: PracticeCaseDetail }) {
       </div>
       <ul className="mt-3 space-y-2" aria-live="polite">
         {results.isFetching && (
-          <li className="flex items-center gap-2 text-sm text-ink-500">
+          <li className="flex items-center gap-2 text-sm text-[#8B6B4A]">
             <Spinner /> Searching…
           </li>
         )}
-        {list.length === 0 && !results.isFetching && <li className="rounded-lg bg-white p-3 text-sm text-ink-500">No candidates. Search by name or chart number, or close as "Not our patient".</li>}
+        {list.length === 0 && !results.isFetching && <li className="rounded-2xl border border-amber-200 bg-white/90 p-3 text-sm text-[#8B6B4A]">No candidates. Search by name or chart number, or close as "Not our patient".</li>}
         {list.map((p) => (
-          <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-white p-3 transition hover:border-brand-300 hover:shadow-[var(--shadow-soft)]">
+          <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/95 bg-white/90 backdrop-blur-md p-3.5 transition hover:border-[#0D9488]/40 hover:shadow-sm">
             <div className="min-w-0">
-              <p className="font-medium text-ink-900">{p.name}</p>
-              <p className="text-[12.5px] text-ink-500">
-                DOB {formatDob(p.dob)} · <span className="font-mono">{p.chartNumber}</span> · phone ••{p.phoneLast4 ?? '—'} · last visit {formatDate(p.lastVisit)}
+              <p className="font-bold text-[#2D2118]">{p.name}</p>
+              <p className="text-[12.5px] text-[#5E4837]">
+                DOB {formatDob(p.dob)} · <span className="font-mono text-[#0D9488] font-semibold">{p.chartNumber}</span> · phone ••{p.phoneLast4 ?? '—'} · last visit {formatDate(p.lastVisit)}
               </p>
             </div>
             <Button size="sm" variant="secondary" icon={<UserCheck className="size-4" />} onClick={() => setChosen(p)}>
@@ -67,6 +67,7 @@ export function PatientMatchPanel({ detail }: { detail: PracticeCaseDetail }) {
               Back
             </Button>
             <Button
+              variant="glow"
               loading={transition.isPending}
               onClick={async () => {
                 if (!chosen) return;

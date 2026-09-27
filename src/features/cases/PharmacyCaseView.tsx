@@ -43,31 +43,31 @@ export function PharmacyCaseView({ detail }: { detail: PharmacyCaseDetail }) {
       </Link>
       <motion.header initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-5">
         <div className="mb-2 flex flex-wrap items-center gap-2">
-          <span className="rounded-md bg-white px-2 py-0.5 font-mono text-[12.5px] font-medium text-brand-800 ring-1 ring-line">{c.caseNumber}</span>
+          <span className="rounded-lg bg-[#0D9488]/10 border border-[#0D9488]/30 px-2.5 py-0.5 font-mono text-[12.5px] font-bold text-[#0D9488] shadow-xs">{c.caseNumber}</span>
           <StatusBadge status={c.status} />
         </div>
-        <h1 className="text-[26px] leading-tight text-brand-900 sm:text-[30px]">
-          <span className="font-light">Patient</span> <span className="font-bold">{c.patientInitials}</span> <span className="font-light text-ink-500">· born {c.dobYear}</span>
+        <h1 className="text-[26px] leading-tight font-display font-extrabold text-[#2D2118] sm:text-[30px]">
+          <span className="font-normal text-[#5E4837]">Patient</span> <span className="font-bold">{c.patientInitials}</span> <span className="font-normal text-[#8B6B4A]">· born {c.dobYear}</span>
         </h1>
-        <p className="mt-1 text-sm text-ink-600">
+        <p className="mt-1 text-sm font-medium text-[#5E4837]">
           {c.medication}
           {c.quantity ? ` · qty ${c.quantity}` : ''} · {c.practiceName}
         </p>
       </motion.header>
 
       {/* Progress */}
-      <Card className="mb-5 p-5">
+      <Card className="surface mb-5 p-5">
         <ol className="grid grid-cols-5 gap-2" aria-label="Request progress">
           {PROGRESS.map((p, i) => {
             const done = i < idx || (c.status === 'CLOSED' && c.resolution === 'completed');
             const current = i === idx && !done;
             return (
               <li key={p.label} className="flex flex-col items-center gap-2 text-center">
-                <span className={cn('relative flex size-8 items-center justify-center rounded-full text-[13px] font-semibold', done ? 'bg-brand-700 text-white' : current ? 'bg-white text-brand-700 ring-2 ring-brand-600' : 'bg-ice-200 text-ink-400')}>
-                  {current && <span className="absolute inset-0 animate-pulse-ring rounded-full bg-brand-300" aria-hidden />}
-                  <span className="relative">{done ? <Check className="size-4" /> : i + 1}</span>
+                <span className={cn('relative flex size-8 items-center justify-center rounded-full text-[13px] font-semibold transition-colors', done ? 'bg-[#0D9488] text-white shadow-sm' : current ? 'bg-gradient-to-r from-[#0D9488] to-[#93C572] text-white ring-2 ring-[#0D9488] shadow-md' : 'bg-white text-[#8B6B4A] border border-[#8B6B4A]/25')}>
+                  {current && <span className="absolute inset-0 animate-pulse-ring rounded-full bg-[#0D9488]/30" aria-hidden />}
+                  <span className="relative">{done ? <Check className="size-4" strokeWidth={3} /> : i + 1}</span>
                 </span>
-                <span className={cn('text-[11.5px] leading-tight sm:text-[12.5px]', current ? 'font-semibold text-brand-800' : 'text-ink-500')}>
+                <span className={cn('text-[11.5px] leading-tight sm:text-[12.5px]', current ? 'font-bold text-[#2D2118]' : 'font-medium text-[#8B6B4A]')}>
                   {p.label}
                   {current && <span className="sr-only"> (current)</span>}
                 </span>
@@ -79,12 +79,12 @@ export function PharmacyCaseView({ detail }: { detail: PharmacyCaseDetail }) {
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-5">
-          <Card>
-            <CardHeader title="What happens next" description={c.nextStep} icon={<ClipboardCheck className="size-4" />} />
+          <Card className="surface rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm">
+            <CardHeader title="What happens next" description={c.nextStep} icon={<ClipboardCheck className="size-4 text-[#0D9488]" />} />
             <div className="space-y-4 p-5">
               {c.approvedOrder && (
-                <div className="rounded-xl border border-ok-600/25 bg-ok-50 p-4">
-                  <p className="text-sm font-semibold text-ok-700">Approved order (new eRx)</p>
+                <div className="rounded-2xl border border-[#93C572]/40 bg-[#93C572]/15 p-4">
+                  <p className="text-sm font-bold text-[#1E4D2B]">Approved order (new eRx)</p>
                   <dl className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     <KeyValue label="Drug">
                       {c.approvedOrder.medicationName} {c.approvedOrder.strength}
@@ -96,9 +96,9 @@ export function PharmacyCaseView({ detail }: { detail: PharmacyCaseDetail }) {
                 </div>
               )}
               {c.denialNextStep && (
-                <div className="rounded-xl border border-bad-600/25 bg-bad-50 p-4 text-sm">
-                  <p className="font-semibold text-bad-700">Not approved</p>
-                  <p className="mt-1 text-ink-700">Next step for the patient: {c.denialNextStep}</p>
+                <div className="rounded-2xl border border-rose-200 bg-rose-50/90 p-4 text-sm">
+                  <p className="font-bold text-rose-800">Not approved</p>
+                  <p className="mt-1 text-[#5E4837]">Next step for the patient: {c.denialNextStep}</p>
                 </div>
               )}
               <div className="flex flex-wrap gap-2">
@@ -110,7 +110,7 @@ export function PharmacyCaseView({ detail }: { detail: PharmacyCaseDetail }) {
                     return (
                       <Button
                         key={a}
-                        variant={isDirect ? 'primary' : m.variant}
+                        variant={isDirect ? 'glow' : m.variant}
                         icon={m.icon}
                         loading={isDirect && transition.isPending && transition.variables?.input.action === a}
                         onClick={() => (isDirect ? void run(a)({}, crypto.randomUUID()).catch(() => undefined) : setDialog(a))}
@@ -123,7 +123,7 @@ export function PharmacyCaseView({ detail }: { detail: PharmacyCaseDetail }) {
             </div>
           </Card>
           {detail.infoRequests.length > 0 && <InfoRequestsPanel caseId={c.id} requests={detail.infoRequests} canAnswer />}
-          <Card>
+          <Card className="surface rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm">
             <CardHeader title="Activity" description="Updates shared with your pharmacy." />
             <div className="p-5">
               <Timeline caseId={c.id} showWhy={false} />
@@ -131,11 +131,11 @@ export function PharmacyCaseView({ detail }: { detail: PharmacyCaseDetail }) {
           </Card>
         </div>
         <aside className="space-y-5">
-          <Card className="p-5">
-            <h2 className="flex items-center gap-2 text-[15px] font-semibold">
-              <Building2 className="size-4 text-brand-600" /> {c.practiceName}
+          <Card className="surface p-5 rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm">
+            <h2 className="flex items-center gap-2 text-[15px] font-bold text-[#2D2118]">
+              <Building2 className="size-4 text-[#0D9488]" /> {c.practiceName}
             </h2>
-            <a href={`tel:${c.practicePhone}`} className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 hover:underline">
+            <a href={`tel:${c.practicePhone}`} className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0D9488] hover:text-[#0F5143] hover:underline transition-colors">
               <Phone className="size-4" /> {c.practicePhone}
             </a>
             <dl className="mt-4 grid grid-cols-2 gap-3">
@@ -143,8 +143,8 @@ export function PharmacyCaseView({ detail }: { detail: PharmacyCaseDetail }) {
               <KeyValue label="Updated">{formatDateTime(c.updatedAt)}</KeyValue>
             </dl>
           </Card>
-          <div className="flex gap-3 rounded-xl border border-line bg-white/70 p-4 text-[13px] text-ink-600">
-            <EyeOff className="mt-0.5 size-4 shrink-0 text-ink-400" aria-hidden />
+          <div className="flex gap-3 rounded-2xl border border-white/95 bg-white/80 p-4 text-[13px] text-[#5E4837] shadow-sm backdrop-blur-md">
+            <EyeOff className="mt-0.5 size-4 shrink-0 text-[#0D9488]" aria-hidden />
             <p>Minimum necessary: you see what you need to fill the prescription. Clinical notes, chart data and AI outputs stay with the practice.</p>
           </div>
         </aside>

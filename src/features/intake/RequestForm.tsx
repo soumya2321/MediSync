@@ -97,7 +97,7 @@ export function RequestForm({ mode, orgs, defaults, extraction, submitting, onSu
         )}
 
         <fieldset className="space-y-4">
-          <legend className="mb-1 text-[13px] font-semibold uppercase tracking-wide text-ink-400">Patient</legend>
+          <legend className="mb-1 text-[13px] font-bold uppercase tracking-wider text-[#0D9488]">Patient</legend>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Input label="First name" required autoComplete="off" {...form.register('patientFirstName')} error={e.patientFirstName?.message} {...fieldProps('patientFirstName')} />
@@ -120,7 +120,7 @@ export function RequestForm({ mode, orgs, defaults, extraction, submitting, onSu
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="mb-1 text-[13px] font-semibold uppercase tracking-wide text-ink-400">Medication</legend>
+          <legend className="mb-1 text-[13px] font-bold uppercase tracking-wider text-[#0D9488]">Medication</legend>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Input label="Drug name" required {...form.register('medicationName')} error={e.medicationName?.message} {...fieldProps('medicationName')} />
@@ -147,7 +147,7 @@ export function RequestForm({ mode, orgs, defaults, extraction, submitting, onSu
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="mb-1 text-[13px] font-semibold uppercase tracking-wide text-ink-400">Helps the practice decide faster (optional)</legend>
+          <legend className="mb-1 text-[13px] font-bold uppercase tracking-wider text-[#0D9488]">Helps the practice decide faster (optional)</legend>
           <div className="grid gap-4 sm:grid-cols-3">
             <Input label="Days of supply left" type="number" min={0} {...form.register('reportedDaysSupplyLeft', optionalNumber)} hint="≤ 2 days makes it urgent." />
             {mode === 'pharmacy' && <Input label="Refills you see on file" type="number" min={0} {...form.register('reportedRefillsRemaining', optionalNumber)} />}
@@ -165,12 +165,12 @@ export function RequestForm({ mode, orgs, defaults, extraction, submitting, onSu
         </fieldset>
 
         {unconfirmed.length > 0 && (
-          <p role="status" className="flex items-center gap-2 rounded-lg bg-warn-50 px-3 py-2 text-[13px] text-warn-700">
-            <AlertTriangle className="size-4 shrink-0" /> Confirm {unconfirmed.length} highlighted field{unconfirmed.length > 1 ? 's' : ''} before sending.
+          <p role="status" className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-[13px] font-semibold text-amber-900">
+            <AlertTriangle className="size-4 shrink-0 text-amber-700" /> Confirm {unconfirmed.length} highlighted field{unconfirmed.length > 1 ? 's' : ''} before sending.
           </p>
         )}
         <div className="flex justify-end">
-          <Button type="submit" size="lg" loading={submitting} disabled={unconfirmed.length > 0} icon={<Send className="size-4" />}>
+          <Button type="submit" variant="glow" size="lg" loading={submitting} disabled={unconfirmed.length > 0} icon={<Send className="size-4" />}>
             {mode === 'pharmacy' ? 'Send request' : 'Create case'}
           </Button>
         </div>

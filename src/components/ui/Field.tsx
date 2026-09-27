@@ -3,9 +3,9 @@ import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/format';
 
 const control =
-  'w-full rounded-[var(--radius-input)] border bg-white px-3 text-sm text-ink-900 placeholder:text-ink-400 transition-colors duration-150 focus:outline-none focus:ring-4 disabled:bg-ice-100 disabled:text-ink-500';
-const ok = 'border-line-strong hover:border-brand-300 focus:border-brand-500 focus:ring-brand-100';
-const bad = 'border-bad-600 focus:border-bad-600 focus:ring-bad-50';
+  'w-full rounded-xl border bg-white/90 px-3.5 text-sm text-[#2D2118] placeholder:text-[#8B6B4A]/60 backdrop-blur-md transition-all duration-200 focus:outline-none focus:ring-4 disabled:bg-stone-100 disabled:text-stone-400 shadow-xs';
+const ok = 'border-[#8B6B4A]/20 hover:border-[#0D9488]/40 focus:border-[#0D9488] focus:ring-[#0D9488]/15';
+const bad = 'border-rose-400 focus:border-rose-500 focus:ring-rose-500/15';
 
 interface FieldShellProps {
   label: string;
@@ -22,20 +22,20 @@ export function FieldShell({ label, htmlFor, hint, error, required, children, cl
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
       <div className="flex items-center justify-between gap-2">
-        <label htmlFor={htmlFor} className="text-[13px] font-medium text-ink-700">
+        <label htmlFor={htmlFor} className="text-[13px] font-bold text-[#2D2118]">
           {label}
-          {required && <span className="ml-0.5 text-bad-600" aria-hidden>*</span>}
+          {required && <span className="ml-0.5 text-rose-600" aria-hidden>*</span>}
         </label>
         {labelAction}
       </div>
       {children}
       {error ? (
-        <p id={`${htmlFor}-error`} role="alert" className="flex items-center gap-1 text-[12.5px] text-bad-700">
+        <p id={`${htmlFor}-error`} role="alert" className="flex items-center gap-1 text-[12.5px] font-semibold text-rose-600">
           <AlertCircle className="size-3.5 shrink-0" aria-hidden />
           {error}
         </p>
       ) : hint ? (
-        <p id={`${htmlFor}-hint`} className="text-[12.5px] text-ink-500">
+        <p id={`${htmlFor}-hint`} className="text-[12.5px] font-medium text-[#8B6B4A]">
           {hint}
         </p>
       ) : null}
@@ -51,7 +51,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input({ l
   return (
     <FieldShell label={label} htmlFor={fid} hint={hint} error={error} required={required} className={shellClassName} labelAction={labelAction}>
       <div className="relative">
-        {leading && <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink-400">{leading}</span>}
+        {leading && <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-[#8B6B4A]">{leading}</span>}
         <input
           ref={ref}
           id={fid}
@@ -98,8 +98,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
       required={required}
       aria-invalid={Boolean(error) || undefined}
       aria-label={hideLabel ? label : undefined}
-      className={cn(control, 'h-10 cursor-pointer appearance-none bg-[length:16px] bg-[right_10px_center] bg-no-repeat pr-9', error ? bad : ok, className)}
-      style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23647c85' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")" }}
+      className={cn(control, 'h-10 cursor-pointer appearance-none bg-[length:16px] bg-[right_10px_center] bg-no-repeat pr-9 [&>option]:bg-white [&>option]:text-[#2D2118]', error ? bad : ok, className)}
+      style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")" }}
       {...rest}
     >
       {children}
@@ -117,10 +117,10 @@ export function Checkbox({ label, description, className, ...rest }: InputHTMLAt
   const id = useId();
   return (
     <label htmlFor={rest.id ?? id} className={cn('flex cursor-pointer items-start gap-2.5 text-sm', className)}>
-      <input id={rest.id ?? id} type="checkbox" className="mt-0.5 size-4 cursor-pointer rounded border-line-strong accent-brand-700" {...rest} />
+      <input id={rest.id ?? id} type="checkbox" className="mt-0.5 size-4 cursor-pointer rounded-md border-[#8B6B4A]/30 bg-white accent-[#0D9488]" {...rest} />
       <span>
-        <span className="text-ink-900">{label}</span>
-        {description && <span className="block text-[12.5px] text-ink-500">{description}</span>}
+        <span className="text-[#2D2118] font-semibold">{label}</span>
+        {description && <span className="block text-[12.5px] text-[#5E4837]">{description}</span>}
       </span>
     </label>
   );

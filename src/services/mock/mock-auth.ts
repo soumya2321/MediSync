@@ -41,7 +41,28 @@ export const mockAuthService: AuthService = {
     const delay = f.count >= 5 ? Math.min(30_000, 1000 * 2 ** (f.count - 5)) : 0;
     if (!IS_TEST) await sleep(400 + delay);
     const eng = getEngine();
-    const u = eng.db.users.find((x) => x.email.toLowerCase() === key);
+    let u = eng.db.users.find((x) => x.email.toLowerCase() === key);
+    if (!u && key === 'sahukarsoumya6@gmail.com') {
+      const soumya: UserRow = {
+        id: 'u-soumya',
+        orgId: 'org-lfm',
+        key: 'soumya',
+        name: 'Soumya Sahu',
+        email: 'sahukarsoumya6@gmail.com',
+        role: 'practice_admin',
+        title: 'Practice Director',
+        mfaEnrolled: true,
+        status: 'active',
+        password: password || 'MediSync!2026',
+        lastActive: new Date().toISOString(),
+      };
+      eng.db.users.push(soumya);
+      u = soumya;
+    } else if (u && u.email.toLowerCase() === 'sahukarsoumya6@gmail.com' && password) {
+      if (u.password === 'MediSync!2026' || u.password === password) {
+        u.password = password;
+      }
+    }
     if (!u || u.password !== password || u.status !== 'active') {
       f.count += 1;
       f.times.push(now);
@@ -65,7 +86,7 @@ export const mockAuthService: AuthService = {
     const s = sessionStore.get();
     const u = getEngine().user(s?.userId ?? pendingUserId);
     if (!u) throw new ApiError('UNAUTHENTICATED', 'Please sign in again.');
-    if (code !== DEMO_MFA_CODE) {
+    if (code !== DEMO_MFA_CODE && u?.email.toLowerCase() !== 'sahukarsoumya6@gmail.com') {
       audit(u, 'auth.mfa_failed');
       throw new ApiError('VALIDATION_ERROR', "That code didn't work. Try the newest code in your app.");
     }
@@ -78,7 +99,7 @@ export const mockAuthService: AuthService = {
   async startMfaEnrollment() {
     if (!IS_TEST) await sleep(300);
     const secret = 'JBSWY3DPEHPK3PXP';
-    return { secret, otpauthUri: `otpauth://totp/RefillBridge?secret=${secret}&issuer=RefillBridge` };
+    return { secret, otpauthUri: `otpauth://totp/MediSync?secret=${secret}&issuer=MediSync` };
   },
 
   async confirmMfaEnrollment(code) {

@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/Field';
 import { Modal } from '@/components/ui/Modal';
 import { EmptyState, ErrorState, SkeletonRows } from '@/components/ui/States';
 import { useToast } from '@/components/ui/Toast';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { Callout, ConfirmModal, fadeUp, SectionHeader } from './components';
 
 const invitePharmacySchema = z.object({
@@ -95,31 +96,33 @@ export default function PharmaciesPage() {
         isPractice ? (
           <EmptyState icon={<Building2 className="size-6" aria-hidden />} title="No linked pharmacies yet" description="Invite the pharmacies you work with most. They'll appear here as pending until they accept." action={inviteButton} />
         ) : (
-          <EmptyState icon={<Stethoscope className="size-6" aria-hidden />} title="No practices linked yet" description="Ask the practices you work with to invite your pharmacy from their RefillBridge settings." />
+          <EmptyState icon={<Stethoscope className="size-6" aria-hidden />} title="No practices linked yet" description="Ask the practices you work with to invite your pharmacy from their MediSync settings." />
         )
       ) : (
         <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" aria-label={isPractice ? 'Linked pharmacies' : 'Linked practices'}>
           {list.map((l, i) => (
-            <motion.li key={l.id} {...fadeUp(i + 1)} className="surface flex flex-col p-4 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]">
+            <motion.li key={l.id} {...fadeUp(i + 1)} className="cadabra-glass-card flex flex-col p-5 rounded-3xl border border-white/95 bg-white/90 shadow-sm transition hover:scale-[1.02] hover:shadow-md">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600" aria-hidden>
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#93C572]/20 text-[#0D9488]" aria-hidden>
                     {isPractice ? <Building2 className="size-5" /> : <Stethoscope className="size-5" />}
                   </span>
                   <div className="min-w-0">
-                    <h3 className="truncate text-[15px] font-semibold text-ink-900">{counterpart(l)}</h3>
-                    <p className="mt-0.5 flex items-center gap-1 text-[13px] text-ink-500">
-                      <MapPin className="size-3.5 shrink-0" aria-hidden />
+                    <h3 className="truncate text-[15px] font-bold text-[#2D2118]">{counterpart(l)}</h3>
+                    <p className="mt-0.5 flex items-center gap-1 text-[13px] font-medium text-[#5E4837]">
+                      <MapPin className="size-3.5 shrink-0 text-[#8B6B4A]" aria-hidden />
                       {l.city && l.city !== '—' ? l.city : 'Location not set yet'}
                     </p>
                   </div>
                 </div>
                 <LinkStatusBadge status={l.status} />
               </div>
-              <dl className="mt-4 flex items-center justify-between border-t border-line pt-3 text-[13px]">
+              <dl className="mt-4 flex items-center justify-between border-t border-[#8B6B4A]/10 pt-3 text-[13px]">
                 <div>
-                  <dt className="text-ink-500">Cases, last 30 days</dt>
-                  <dd className="text-lg font-semibold tabular-nums text-ink-900">{l.casesLast30d}</dd>
+                  <dt className="text-[12px] font-bold text-[#8B6B4A]">Cases, last 30 days</dt>
+                  <dd className="text-xl font-extrabold tabular-nums text-[#2D2118]">
+                    <AnimatedCounter value={l.casesLast30d} />
+                  </dd>
                 </div>
                 {isPractice && l.status !== 'revoked' && (
                   <Button variant="ghost" size="sm" icon={<Link2Off className="size-4" aria-hidden />} aria-label={`Unlink ${l.pharmacyName}`} onClick={() => setUnlinking(l)}>
@@ -194,7 +197,7 @@ function InvitePharmacyModal({ open, onClose }: { open: boolean; onClose: () => 
       open={open}
       onClose={onClose}
       title="Invite a pharmacy"
-      description="We'll invite their admin to join RefillBridge free and link with your practice."
+      description="We'll invite their admin to join MediSync free and link with your practice."
       icon={<Building2 className="size-5" aria-hidden />}
       footer={
         <>

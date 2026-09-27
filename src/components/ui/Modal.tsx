@@ -74,7 +74,7 @@ export function Modal({ open, onClose, title, description, children, footer, siz
       {open && (
         <div className="fixed inset-0 z-[70] flex items-end justify-center p-0 sm:items-center sm:p-6">
           <motion.div
-            className="absolute inset-0 bg-brand-950/35 backdrop-blur-[3px]"
+            className="absolute inset-0 bg-[#10070E]/80 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -88,32 +88,32 @@ export function Modal({ open, onClose, title, description, children, footer, siz
             aria-labelledby={titleId}
             aria-describedby={description ? descId : undefined}
             tabIndex={-1}
-            className={cn('relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-[var(--shadow-lift)] sm:rounded-2xl', widths[size])}
+            className={cn('relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-3xl border border-white/95 bg-white/95 backdrop-blur-2xl shadow-[0_24px_70px_rgba(139,107,74,0.18)] text-[#2D2118]', widths[size])}
             initial={{ opacity: 0, y: 24, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
           >
-            <div className="flex items-start gap-3 border-b border-line px-5 py-4 sm:px-6">
+            <div className="flex items-start gap-3 border-b border-[#8B6B4A]/15 bg-white/60 px-6 py-4">
               {icon && (
-                <div className={cn('mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full', tone === 'danger' ? 'bg-bad-50 text-bad-600' : 'bg-brand-100 text-brand-700')}>{icon}</div>
+                <div className={cn('mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl', tone === 'danger' ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-[#93C572]/20 text-[#0D9488] border border-[#0D9488]/30')}>{icon}</div>
               )}
               <div className="min-w-0 flex-1">
-                <h2 id={titleId} className="text-lg font-semibold text-ink-900">
+                <h2 id={titleId} className="text-lg font-bold text-[#2D2118]">
                   {title}
                 </h2>
                 {description && (
-                  <p id={descId} className="mt-0.5 text-sm text-ink-500">
+                  <p id={descId} className="mt-0.5 text-sm font-medium text-[#5E4837]">
                     {description}
                   </p>
                 )}
               </div>
-              <button type="button" onClick={onClose} className="rounded-md p-1.5 text-ink-500 transition hover:bg-ice-100 hover:text-ink-900" aria-label="Close dialog">
+              <button type="button" onClick={onClose} className="rounded-xl p-1.5 text-[#8B6B4A] transition hover:bg-[#F5F0E6] hover:text-[#2D2118]" aria-label="Close dialog">
                 <X className="size-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">{children}</div>
-            {footer && <div className="flex flex-col-reverse gap-2 border-t border-line bg-ice-50 px-5 py-3.5 sm:flex-row sm:justify-end sm:px-6">{footer}</div>}
+            <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
+            {footer && <div className="flex flex-col-reverse gap-2 border-t border-[#8B6B4A]/15 bg-white/80 px-6 py-4 sm:flex-row sm:justify-end">{footer}</div>}
           </motion.div>
         </div>
       )}
@@ -139,31 +139,31 @@ export function Drawer({ open, onClose, title, description, children, side = 'ri
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-[65]">
-          <motion.div className="absolute inset-0 bg-brand-950/30 backdrop-blur-[2px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} aria-hidden />
+          <motion.div className="absolute inset-0 bg-[#2D2118]/30 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} aria-hidden />
           <motion.aside
             ref={ref}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
             tabIndex={-1}
-            className={cn('absolute inset-y-0 flex w-full max-w-md flex-col bg-white shadow-[var(--shadow-lift)]', side === 'right' ? 'right-0' : 'left-0')}
+            className={cn('absolute inset-y-0 flex w-full max-w-md flex-col bg-white/95 backdrop-blur-2xl border-l border-[#8B6B4A]/15 shadow-[0_0_50px_rgba(139,107,74,0.15)] text-[#2D2118]', side === 'right' ? 'right-0' : 'left-0')}
             initial={{ x: side === 'right' ? '100%' : '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: side === 'right' ? '100%' : '-100%' }}
             transition={{ type: 'spring', stiffness: 340, damping: 36 }}
           >
-            <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
+            <div className="flex items-start justify-between gap-3 border-b border-[#8B6B4A]/15 bg-white/60 px-6 py-4">
               <div>
-                <h2 id={titleId} className="text-lg font-semibold">
+                <h2 id={titleId} className="text-lg font-bold text-[#2D2118]">
                   {title}
                 </h2>
-                {description && <p className="mt-0.5 text-sm text-ink-500">{description}</p>}
+                {description && <p className="mt-0.5 text-sm font-medium text-[#5E4837]">{description}</p>}
               </div>
-              <button type="button" onClick={onClose} className="rounded-md p-1.5 text-ink-500 hover:bg-ice-100" aria-label="Close">
+              <button type="button" onClick={onClose} className="rounded-xl p-1.5 text-[#8B6B4A] hover:bg-[#F5F0E6] hover:text-[#2D2118]" aria-label="Close">
                 <X className="size-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-5">{children}</div>
+            <div className="flex-1 overflow-y-auto p-6">{children}</div>
           </motion.aside>
         </div>
       )}

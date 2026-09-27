@@ -76,38 +76,38 @@ export default function TeamPage() {
       ) : (
         <>
           {/* Desktop table */}
-          <motion.div {...fadeUp(1)} className="surface hidden overflow-hidden md:block">
+          <motion.div {...fadeUp(1)} className="surface hidden overflow-hidden rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm md:block">
             <table className="w-full text-sm">
               <caption className="sr-only">Team members</caption>
               <thead>
-                <tr className="border-b border-line bg-ice-50 text-left text-[12px] uppercase tracking-wide text-ink-400">
-                  <th scope="col" className="px-4 py-2.5 font-medium">Member</th>
-                  <th scope="col" className="px-4 py-2.5 font-medium">Role</th>
-                  <th scope="col" className="px-4 py-2.5 font-medium">Status</th>
-                  <th scope="col" className="px-4 py-2.5 font-medium">MFA</th>
-                  <th scope="col" className="px-4 py-2.5 font-medium">Last active</th>
-                  <th scope="col" className="px-4 py-2.5 text-right font-medium">
+                <tr className="border-b border-[#8B6B4A]/15 bg-white/40 text-left text-[12px] font-bold uppercase tracking-wider text-[#8B6B4A]">
+                  <th scope="col" className="px-5 py-3">Member</th>
+                  <th scope="col" className="px-5 py-3">Role</th>
+                  <th scope="col" className="px-5 py-3">Status</th>
+                  <th scope="col" className="px-5 py-3">MFA</th>
+                  <th scope="col" className="px-5 py-3">Last active</th>
+                  <th scope="col" className="px-5 py-3 text-right">
                     <span className="sr-only">Actions</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {list.map((m) => (
-                  <tr key={m.id} className="border-b border-line transition-colors last:border-0 hover:bg-ice-50">
-                    <td className="max-w-0 px-4 py-3">
+                  <tr key={m.id} className="border-b border-[#8B6B4A]/10 transition-colors last:border-0 hover:bg-white/80">
+                    <td className="max-w-0 px-5 py-3.5">
                       <MemberIdentity member={m} isYou={m.id === user?.id} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-5 py-3.5">
                       <RoleControl member={m} roles={roles} onChange={(role) => setPendingRole({ member: m, role })} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-5 py-3.5">
                       <MemberStatusBadge status={m.status} />
                     </td>
-                    <td className="px-4 py-3">{m.status === 'invited' ? <span className="text-ink-400">—</span> : <MfaShortBadge enrolled={m.mfaEnrolled} required={MFA_REQUIRED_ROLES.includes(m.role)} />}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-ink-600">
-                      {m.lastActive ? <time dateTime={m.lastActive} title={formatDateTime(m.lastActive)}>{timeAgo(m.lastActive)}</time> : <span className="text-ink-400">Never</span>}
+                    <td className="px-5 py-3.5">{m.status === 'invited' ? <span className="text-[#8B6B4A]">—</span> : <MfaShortBadge enrolled={m.mfaEnrolled} required={MFA_REQUIRED_ROLES.includes(m.role)} />}</td>
+                    <td className="whitespace-nowrap px-5 py-3.5 text-[#5E4837] font-medium">
+                      {m.lastActive ? <time dateTime={m.lastActive} title={formatDateTime(m.lastActive)}>{timeAgo(m.lastActive)}</time> : <span className="text-[#8B6B4A]">Never</span>}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-5 py-3.5 text-right">
                       <Button variant="ghost" size="sm" icon={<UserMinus className="size-4" aria-hidden />} aria-label={m.status === 'invited' ? `Revoke invite for ${m.email}` : `Remove ${displayName(m)}`} onClick={() => setRemoving(m)}>
                         {m.status === 'invited' ? 'Revoke' : 'Remove'}
                       </Button>
@@ -121,7 +121,7 @@ export default function TeamPage() {
           {/* Mobile cards */}
           <ul className="space-y-3 md:hidden" aria-label="Team members">
             {list.map((m, i) => (
-              <motion.li key={m.id} {...fadeUp(i + 1)} className="surface p-4">
+              <motion.li key={m.id} {...fadeUp(i + 1)} className="surface p-5 rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm">
                 <MemberIdentity member={m} isYou={m.id === user?.id} />
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   <MemberStatusBadge status={m.status} />

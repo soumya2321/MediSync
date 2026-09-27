@@ -89,38 +89,38 @@ export default function AuditLogPage() {
             />
           ) : (
             <>
-              <div className="surface hidden overflow-hidden md:block">
+              <div className="surface hidden overflow-hidden rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm md:block">
                 <table className="w-full table-fixed text-sm">
                   <caption className="sr-only">Audit log entries, page {page}</caption>
                   <thead>
-                    <tr className="border-b border-line bg-ice-50 text-left text-[12px] uppercase tracking-wide text-ink-400">
-                      <th scope="col" className="w-[17%] px-4 py-2.5 font-medium">Time</th>
-                      <th scope="col" className="w-[19%] px-4 py-2.5 font-medium">Actor</th>
-                      <th scope="col" className="w-[25%] px-4 py-2.5 font-medium">Action</th>
-                      <th scope="col" className="w-[25%] px-4 py-2.5 font-medium">Entity</th>
-                      <th scope="col" className="w-[14%] px-4 py-2.5 font-medium">Request ID</th>
+                    <tr className="border-b border-[#8B6B4A]/15 bg-white/40 text-left text-[12px] font-bold uppercase tracking-wider text-[#8B6B4A]">
+                      <th scope="col" className="w-[17%] px-5 py-3">Time</th>
+                      <th scope="col" className="w-[19%] px-5 py-3">Actor</th>
+                      <th scope="col" className="w-[25%] px-5 py-3">Action</th>
+                      <th scope="col" className="w-[25%] px-5 py-3">Entity</th>
+                      <th scope="col" className="w-[14%] px-5 py-3">Request ID</th>
                     </tr>
                   </thead>
                   <tbody>
                     {visible.map((r) => (
-                      <tr key={r.id} className="border-b border-line align-top transition-colors last:border-0 hover:bg-ice-50">
-                        <td className="px-4 py-2.5 text-ink-700">
+                      <tr key={r.id} className="border-b border-[#8B6B4A]/10 align-top transition-colors last:border-0 hover:bg-white/80">
+                        <td className="px-5 py-3.5 text-[#5E4837] font-medium">
                           <time dateTime={r.createdAt} title={timeAgo(r.createdAt)}>
                             {formatDateTime(r.createdAt)}
                           </time>
                         </td>
-                        <td className="truncate px-4 py-2.5 text-ink-900" title={r.actorName}>
+                        <td className="truncate px-5 py-3.5 font-bold text-[#2D2118]" title={r.actorName}>
                           {r.actorName}
                         </td>
-                        <td className="px-4 py-2.5">
-                          <code className="break-all rounded bg-ice-100 px-1.5 py-0.5 font-mono text-[12px] text-brand-900">{r.action}</code>
+                        <td className="px-5 py-3.5">
+                          <code className="break-all rounded-lg bg-[#93C572]/15 px-2 py-0.5 font-mono text-[12px] font-bold text-[#0F5143] border border-[#93C572]/30">{r.action}</code>
                         </td>
-                        <td className="px-4 py-2.5 text-ink-700">
-                          <span className="break-words">{r.entity}</span>
-                          {r.entityId && <span className="block truncate font-mono text-[11.5px] text-ink-400" title={r.entityId}>{r.entityId}</span>}
+                        <td className="px-5 py-3.5 text-[#5E4837] font-medium">
+                          <span className="break-words font-semibold text-[#2D2118]">{r.entity}</span>
+                          {r.entityId && <span className="block truncate font-mono text-[11.5px] text-[#8B6B4A]" title={r.entityId}>{r.entityId}</span>}
                         </td>
-                        <td className="px-4 py-2.5">
-                          <code className="font-mono text-[12px] text-ink-600" title={r.requestId}>
+                        <td className="px-5 py-3.5">
+                          <code className="font-mono text-[12px] text-[#8B6B4A]" title={r.requestId}>
                             {r.requestId.slice(0, 8)}
                           </code>
                         </td>
@@ -130,19 +130,19 @@ export default function AuditLogPage() {
                 </table>
               </div>
 
-              <ul className="space-y-2.5 md:hidden" aria-label={`Audit log entries, page ${page}`}>
+              <ul className="space-y-3 md:hidden" aria-label={`Audit log entries, page ${page}`}>
                 {visible.map((r) => (
-                  <li key={r.id} className="surface p-3.5">
+                  <li key={r.id} className="surface p-4 rounded-3xl border border-white/95 bg-white/90 backdrop-blur-xl shadow-sm">
                     <div className="flex items-start justify-between gap-3">
-                      <code className="min-w-0 break-all rounded bg-ice-100 px-1.5 py-0.5 font-mono text-[12px] text-brand-900">{r.action}</code>
-                      <time dateTime={r.createdAt} className="shrink-0 text-[12px] text-ink-500">
+                      <code className="min-w-0 break-all rounded-lg bg-[#93C572]/15 px-2 py-0.5 font-mono text-[12px] font-bold text-[#0F5143] border border-[#93C572]/30">{r.action}</code>
+                      <time dateTime={r.createdAt} className="shrink-0 text-[12px] font-medium text-[#8B6B4A]">
                         {formatDateTime(r.createdAt)}
                       </time>
                     </div>
-                    <dl className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-[13px]">
-                      <dt className="text-ink-500">Actor</dt>
-                      <dd className="truncate text-ink-900">{r.actorName}</dd>
-                      <dt className="text-ink-500">Entity</dt>
+                    <dl className="mt-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-[13px]">
+                      <dt className="text-[#8B6B4A] font-semibold">Actor</dt>
+                      <dd className="truncate text-[#2D2118] font-bold">{r.actorName}</dd>
+                      <dt className="text-[#8B6B4A] font-semibold">Entity</dt>
                       <dd className="truncate text-ink-700">
                         {r.entity}
                         {r.entityId && <span className="ml-1 font-mono text-[11.5px] text-ink-400">{r.entityId}</span>}

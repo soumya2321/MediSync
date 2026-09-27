@@ -106,27 +106,27 @@ function InviteForm({ token, email, role, orgName }: { token: string; email: str
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-      <div className="flex items-start gap-3 rounded-xl border border-brand-200 bg-brand-50/70 p-3.5">
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-white text-brand-700 shadow-sm">
+      <div className="flex items-start gap-3 rounded-2xl border border-white/95 bg-white/90 p-4 shadow-xs">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#93C572]/20 text-[#0D9488] shadow-xs">
           <Building2 className="size-[18px]" aria-hidden />
         </span>
-        <p className="text-[14px] text-ink-700">
-          Join <span className="font-semibold text-brand-900">{orgName}</span> as <span className="font-semibold text-brand-900">{ROLE_LABELS[role]}</span>
+        <p className="text-[14px] font-medium text-[#5E4837]">
+          Join <span className="font-bold text-[#2D2118]">{orgName}</span> as <span className="font-bold text-[#0D9488]">{ROLE_LABELS[role]}</span>
         </p>
       </div>
       {formError && <FormAlert tone="error">{formError}</FormAlert>}
-      <Input label="Email" value={email} readOnly aria-readonly="true" leading={<Mail className="size-4" />} className="bg-ice-50 text-ink-600" hint="Invites are tied to this address." />
+      <Input label="Email" value={email} readOnly aria-readonly="true" leading={<Mail className="size-4" />} className="bg-stone-50 text-[#5E4837]" hint="Invites are tied to this address." />
       <Input label="Full name" autoComplete="name" leading={<UserRound className="size-4" />} error={errors.name?.message} {...register('name')} />
       <PasswordInput label="Password" autoComplete="new-password" error={errors.password?.message} {...register('password')} />
       <PasswordChecklist password={password} email={email} name={name} />
       <PasswordInput label="Confirm password" autoComplete="new-password" error={errors.confirm?.message} {...register('confirm')} />
       {needsMfa && (
-        <p className="flex items-start gap-2 text-[12.5px] text-ink-600">
-          <ShieldCheck className="mt-0.5 size-4 shrink-0 text-brand-600" aria-hidden />
+        <p className="flex items-start gap-2 text-[12.5px] font-medium text-[#5E4837]">
+          <ShieldCheck className="mt-0.5 size-4 shrink-0 text-[#0D9488]" aria-hidden />
           Your role makes clinical or admin decisions, so you'll set up an authenticator app after your first sign-in.
         </p>
       )}
-      <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
+      <Button type="submit" variant="glow" size="lg" className="w-full" loading={isSubmitting}>
         Create my account
       </Button>
     </form>

@@ -17,12 +17,12 @@ export function AiSummaryCard({ caseId, version, onSourceClick }: { caseId: stri
     void refillService.recordAiOutcome(q.data.suggestionId, o);
   };
   return (
-    <section aria-labelledby="ai-summary" className="relative overflow-hidden rounded-[var(--radius-card)] border border-info-600/20 bg-gradient-to-br from-info-50 via-white to-white p-5 shadow-[var(--shadow-soft)]">
+    <section aria-labelledby="ai-summary" className="relative overflow-hidden rounded-3xl border border-white/95 bg-white/90 p-5 shadow-[0_16px_40px_rgba(139,107,74,0.08)] backdrop-blur-xl">
       <div className="flex items-center justify-between gap-2">
-        <h3 id="ai-summary" className="flex items-center gap-2 text-[15px] font-semibold text-ink-900">
-          <Sparkles className="size-4 text-info-600" aria-hidden /> Case summary
+        <h3 id="ai-summary" className="flex items-center gap-2 text-[15px] font-bold text-[#2D2118]">
+          <Sparkles className="size-4 text-[#0D9488]" aria-hidden /> Case summary
         </h3>
-        <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-info-700 ring-1 ring-info-600/20">{q.data?.mock ? 'Demo AI (mock)' : 'AI'}</span>
+        <span className="rounded-full bg-[#0D9488]/10 border border-[#0D9488]/25 px-2.5 py-0.5 text-[11px] font-bold text-[#0D9488] shadow-xs">{q.data?.mock ? 'Demo AI (mock)' : 'AI Assist'}</span>
       </div>
       {q.isLoading && (
         <div className="mt-3 space-y-2" aria-busy>
@@ -32,7 +32,7 @@ export function AiSummaryCard({ caseId, version, onSourceClick }: { caseId: stri
         </div>
       )}
       {q.isError && (
-        <p className="mt-3 text-sm text-ink-600">
+        <p className="mt-3 text-sm text-[#5E4837]">
           Summary unavailable{q.error instanceof ApiError && q.error.code === 'AI_UNAVAILABLE' ? ' — AI assist is offline' : ''}. Use the records below; nothing is blocked.
         </p>
       )}
@@ -40,16 +40,16 @@ export function AiSummaryCard({ caseId, version, onSourceClick }: { caseId: stri
         <>
           <ul className="mt-3 space-y-2.5">
             {q.data.bullets.map((b, i) => (
-              <motion.li key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink-800">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-info-600" aria-hidden />
+              <motion.li key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="flex gap-2.5 text-[13.5px] leading-relaxed text-[#2D2118]">
+                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#0D9488]" aria-hidden />
                 <span>
                   {b.text}{' '}
-                  {b.sourceRefs.map((s) => (
+                  {b.sourceRefs.map((s, sIndex) => (
                     <button
-                      key={s.ref}
+                      key={`${s.ref}-${sIndex}`}
                       type="button"
                       onClick={() => onSourceClick?.(s.ref)}
-                      className="ml-0.5 inline-flex items-center gap-0.5 rounded bg-white px-1.5 py-px align-middle text-[11px] font-medium text-info-700 ring-1 ring-info-600/20 hover:bg-info-50"
+                      className="ml-0.5 inline-flex items-center gap-0.5 rounded-lg bg-[#0D9488]/10 border border-[#0D9488]/25 px-1.5 py-0.5 align-middle text-[11px] font-bold text-[#0D9488] hover:bg-[#0D9488]/20 transition-colors"
                       title={`Source: ${s.ref}`}
                     >
                       <Link2 className="size-3" aria-hidden />
@@ -60,13 +60,13 @@ export function AiSummaryCard({ caseId, version, onSourceClick }: { caseId: stri
               </motion.li>
             ))}
           </ul>
-          <div className="mt-4 flex items-center justify-between gap-2 border-t border-info-600/10 pt-3">
-            <p className="text-[11.5px] text-ink-400">Suggestion only — decide from the source records. {q.data.promptVersion}</p>
+          <div className="mt-4 flex items-center justify-between gap-2 border-t border-[#8B6B4A]/15 pt-3">
+            <p className="text-[11.5px] text-[#8B6B4A] font-medium">Suggestion only — decide from the source records. {q.data.promptVersion}</p>
             <div className="flex gap-1" role="group" aria-label="Was this summary helpful?">
-              <button type="button" onClick={() => vote('accepted')} aria-pressed={feedback === 'accepted'} className={cn('rounded-md p-1.5 text-ink-400 hover:bg-ok-50 hover:text-ok-700', feedback === 'accepted' && 'bg-ok-50 text-ok-700')} aria-label="Helpful">
+              <button type="button" onClick={() => vote('accepted')} aria-pressed={feedback === 'accepted'} className={cn('rounded-lg p-1.5 text-[#8B6B4A] hover:bg-emerald-50 hover:text-emerald-700 transition-colors', feedback === 'accepted' && 'bg-emerald-100 text-emerald-800')} aria-label="Helpful">
                 <ThumbsUp className="size-4" />
               </button>
-              <button type="button" onClick={() => vote('rejected')} aria-pressed={feedback === 'rejected'} className={cn('rounded-md p-1.5 text-ink-400 hover:bg-bad-50 hover:text-bad-700', feedback === 'rejected' && 'bg-bad-50 text-bad-700')} aria-label="Not helpful">
+              <button type="button" onClick={() => vote('rejected')} aria-pressed={feedback === 'rejected'} className={cn('rounded-lg p-1.5 text-[#8B6B4A] hover:bg-rose-50 hover:text-rose-700 transition-colors', feedback === 'rejected' && 'bg-rose-100 text-rose-800')} aria-label="Not helpful">
                 <ThumbsDown className="size-4" />
               </button>
             </div>

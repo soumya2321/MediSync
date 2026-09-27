@@ -486,7 +486,7 @@ export const mockRefillService: RefillService = {
     const m = me();
     const c = scopedCase(m, caseId);
     const owner = m.eng.user(c.ownerUserId);
-    const ownerLabel = owner ? `${owner.name} (${ROLE_LABELS[owner.role]})` : c.ownerRole === 'system' ? 'RefillBridge (automatic)' : `${ROLE_LABELS[c.ownerRole]} team queue`;
+    const ownerLabel = owner ? `${owner.name} (${ROLE_LABELS[owner.role]})` : c.ownerRole === 'system' ? 'MediSync (automatic)' : `${ROLE_LABELS[c.ownerRole]} team queue`;
     const diag = buildDiagnosis({
       status: c.status,
       statusSince: c.statusSince,
@@ -584,7 +584,7 @@ export const mockRefillService: RefillService = {
           if (!Number.isNaN(n)) c.requestedPayload = { ...c.requestedPayload, quantity: n };
         }
       }
-      m.eng.apply(c, 'INFO_RECEIVED', { ...ctx, actor: { kind: 'system' }, actorType: 'system', name: 'RefillBridge' }, { reason: 'All questions answered.' });
+      m.eng.apply(c, 'INFO_RECEIVED', { ...ctx, actor: { kind: 'system' }, actorType: 'system', name: 'MediSync' }, { reason: 'All questions answered.' });
     }
     notifyChange();
     return stripIr(ir);
@@ -939,7 +939,7 @@ export const mockRefillService: RefillService = {
     if (name.trim().length < 2 || !/^\S+@\S+\.\S+$/.test(email)) throw new ApiError('VALIDATION_ERROR', 'Enter the pharmacy name and a valid email.');
     const org = { id: uid('org'), name: name.trim(), type: 'pharmacy' as const, timezone: 'America/Chicago', phone: '—', city: '—' };
     m.eng.db.orgs.push(org);
-    const link = { id: uid('lnk'), practiceOrgId: m.user.orgId, pharmacyOrgId: org.id, practiceName: m.user.orgId === 'org-lfm' ? 'Lakeside Family Medicine' : m.eng.org(m.user.orgId).name, pharmacyName: org.name, status: 'pending' as const, city: '—', casesLast30d: 0 };
+    const link = { id: uid('lnk'), practiceOrgId: m.user.orgId, pharmacyOrgId: org.id, practiceName: m.user.orgId === 'org-lfm' ? 'PeopleTree Family Medicine' : m.eng.org(m.user.orgId).name, pharmacyName: org.name, status: 'pending' as const, city: '—', casesLast30d: 0 };
     m.eng.db.links.push(link);
     m.eng.audit(m.user.orgId, newCtx(m.user, m.aal), 'pharmacy_link.invite', 'practice_pharmacy_links', link.id);
     const { practiceOrgId: _a, pharmacyOrgId: _b, ...rest } = link;

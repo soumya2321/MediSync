@@ -45,16 +45,16 @@ describe('SignInPage', () => {
   it('fills the form when a demo account is clicked', async () => {
     const user = userEvent.setup();
     setup();
-    await user.click(screen.getByRole('button', { name: /jordan ellis/i }));
+    await user.click(screen.getByRole('button', { name: /aarav patel/i }));
     expect(screen.getByLabelText(/^email/i)).toHaveValue('staff@lakeside.example.com');
-    expect(screen.getByLabelText(/^password/i)).toHaveValue('Refill!2026');
+    expect(screen.getByLabelText(/^password/i)).toHaveValue('MediSync!2026');
   });
 
   it('signs staff in and navigates to the queue', async () => {
     const user = userEvent.setup();
     setup();
     await user.type(screen.getByLabelText(/^email/i), 'staff@lakeside.example.com');
-    await user.type(screen.getByLabelText(/^password/i), 'Refill!2026');
+    await user.type(screen.getByLabelText(/^password/i), 'MediSync!2026');
     await user.click(screen.getByRole('button', { name: /^sign in$/i }));
     await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/queue'));
   });
@@ -62,8 +62,8 @@ describe('SignInPage', () => {
   it('sends MFA roles to the MFA step and keeps next', async () => {
     const user = userEvent.setup();
     setup('/sign-in?next=%2Fanalytics');
-    await user.type(screen.getByLabelText(/^email/i), 'dr.rao@lakeside.example.com');
-    await user.type(screen.getByLabelText(/^password/i), 'Refill!2026');
+    await user.type(screen.getByLabelText(/^email/i), 'dr.verma@lakeside.example.com');
+    await user.type(screen.getByLabelText(/^password/i), 'MediSync!2026');
     await user.click(screen.getByRole('button', { name: /^sign in$/i }));
     await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/mfa?next=%2Fanalytics&mode=verify'));
   });

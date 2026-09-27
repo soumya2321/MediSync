@@ -16,10 +16,10 @@ export const fadeUp = (i = 0) => ({
 /** Section heading used inside the settings layout (the layout owns the page <h1>). */
 export function SectionHeader({ title, description, action }: { title: string; description?: ReactNode; action?: ReactNode }) {
   return (
-    <motion.div {...fadeUp(0)} className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <motion.div {...fadeUp(0)} className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <h2 className="text-xl font-light text-brand-900">{title}</h2>
-        {description && <p className="mt-1 max-w-2xl text-sm text-ink-500">{description}</p>}
+        <h2 className="text-2xl font-light text-[#2D2118]">{title}</h2>
+        {description && <p className="mt-1 max-w-2xl text-sm font-medium text-[#5E4837]">{description}</p>}
       </div>
       {action && <div className="flex shrink-0 flex-wrap gap-2">{action}</div>}
     </motion.div>
@@ -28,12 +28,12 @@ export function SectionHeader({ title, description, action }: { title: string; d
 
 export function Callout({ icon, tone = 'info', children, className }: { icon: ReactNode; tone?: 'info' | 'warn' | 'brand'; children: ReactNode; className?: string }) {
   const tones = {
-    info: 'border-info-600/20 bg-info-50 text-info-700',
-    warn: 'border-warn-600/25 bg-warn-50 text-warn-700',
-    brand: 'border-brand-200 bg-brand-50 text-brand-800',
+    info: 'border-[#0D9488]/25 bg-[#0D9488]/10 text-[#0F5143]',
+    warn: 'border-amber-200 bg-amber-50/90 text-amber-900',
+    brand: 'border-[#93C572]/30 bg-[#93C572]/15 text-[#1E4D2B]',
   };
   return (
-    <div className={cn('flex items-start gap-3 rounded-xl border px-4 py-3 text-sm', tones[tone], className)}>
+    <div className={cn('flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm font-medium shadow-xs', tones[tone], className)}>
       <span className="mt-0.5 shrink-0" aria-hidden>
         {icon}
       </span>
@@ -101,7 +101,7 @@ export function CopyField({ label, value, hint }: { label: string; value: string
   };
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-[13px] font-medium text-ink-700">
+      <label htmlFor={id} className="text-[13px] font-bold text-[#2D2118]">
         {label}
       </label>
       <div className="flex gap-2">
@@ -112,14 +112,14 @@ export function CopyField({ label, value, hint }: { label: string; value: string
           value={value}
           onFocus={(e) => e.currentTarget.select()}
           aria-describedby={hint ? `${id}-hint` : undefined}
-          className="h-10 min-w-0 flex-1 rounded-[var(--radius-input)] border border-line-strong bg-ice-50 px-3 font-mono text-[12.5px] text-ink-900 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100"
+          className="h-10 min-w-0 flex-1 rounded-xl border border-[#8B6B4A]/25 bg-white/90 px-3 font-mono text-[12.5px] text-[#2D2118] focus:border-[#0D9488] focus:outline-none focus:ring-4 focus:ring-[#0D9488]/15"
         />
-        <Button variant="secondary" onClick={() => void copy()} icon={copied ? <Check className="size-4 text-ok-600" aria-hidden /> : <Copy className="size-4" aria-hidden />} aria-live="polite">
+        <Button variant="secondary" onClick={() => void copy()} icon={copied ? <Check className="size-4 text-emerald-600" aria-hidden /> : <Copy className="size-4" aria-hidden />} aria-live="polite">
           {copied ? 'Copied' : 'Copy'}
         </Button>
       </div>
       {hint && (
-        <p id={`${id}-hint`} className="text-[12.5px] text-ink-500">
+        <p id={`${id}-hint`} className="text-[12.5px] font-medium text-[#8B6B4A]">
           {hint}
         </p>
       )}

@@ -24,7 +24,7 @@ describe('Provider inbox & decision panel', () => {
     renderRoutes(routes, `/provider/inbox/${id}`);
     await user.click(await screen.findByRole('button', { name: /Review order/ }));
     const dialog = await screen.findByRole('dialog', { name: /Confirm your decision/ });
-    expect(within(dialog).getByText(/James Carter/)).toBeInTheDocument();
+    expect(within(dialog).getByText(/Vikram Malhotra/)).toBeInTheDocument();
     expect(within(dialog).getByText(/Lisinopril 20 mg/)).toBeInTheDocument();
     expect(within(dialog).getByText('CityCare Pharmacy')).toBeInTheDocument();
     await user.click(within(dialog).getByRole('button', { name: /Confirm & sign/ }));
@@ -36,11 +36,12 @@ describe('Provider inbox & decision panel', () => {
     const eng = setupDemo('rao');
     const user = userEvent.setup();
     renderRoutes(routes, `/provider/inbox/${eng.seedKeys.c1}`);
-    await user.click(await screen.findByText('Do not approve'));
-    await user.click(screen.getByRole('button', { name: /Review order/ }));
+    await user.click(await screen.findByRole('radio', { name: /Do not approve/i }));
+    expect(await screen.findByRole('combobox', { name: /Reason/i })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /Review order/i }));
     expect(await screen.findByText('Choose a reason')).toBeInTheDocument();
     expect(screen.getByText('Tell the patient what to do next')).toBeInTheDocument();
-    expect(screen.queryByRole('dialog', { name: /Confirm your decision/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog', { name: /Confirm your decision/i })).not.toBeInTheDocument();
   });
 
   it('at aal1 the step-up MFA modal appears before the decision is saved', async () => {
@@ -51,7 +52,7 @@ describe('Provider inbox & decision panel', () => {
     await user.click(await screen.findByRole('button', { name: /Review order/ }));
     await user.click(within(await screen.findByRole('dialog', { name: /Confirm your decision/ })).getByRole('button', { name: /Confirm & sign/ }));
     const mfa = await screen.findByRole('dialog', { name: /Verify it's you/ });
-    await user.type(within(mfa).getByLabelText('6-digit code'), '123456');
+    await user.type(within(mfa).getByLabelText('6-digit code'), '111111');
     await user.click(within(mfa).getByRole('button', { name: /Verify and continue/ }));
     await waitFor(() => expect(eng.db.cases.find((c) => c.id === id)?.status).toBe('APPROVED'));
   });

@@ -109,7 +109,7 @@ export const decisionSchema = z
     daysSupply: z.coerce.number().int().min(1, 'At least 1').max(365),
     refills: z.coerce.number().int().min(0).max(11),
     bridgeDays: z.coerce.number().int().min(1, 'At least 1 day').optional(),
-    reasonCode: z.enum(DENY_REASON_CODES).optional(),
+    reasonCode: z.preprocess((v) => (v === '' ? undefined : v), z.enum(DENY_REASON_CODES).optional()),
     patientNextStep: z.string().trim().max(300).optional(),
     note: z.string().trim().max(1000).optional(),
   })
