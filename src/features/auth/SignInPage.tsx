@@ -26,8 +26,9 @@ import { Input } from '@/components/ui/Field';
 import { Logo } from '@/components/ui/Layout';
 import { ApiError, authService, friendlyMessage } from '@/services';
 import { DEMO_MFA_CODE, DEMO_PASSWORD } from '@/mocks/data/fixtures';
-import { BotanicalSprays, CadabraTabletPreview, LeafCornerSpray } from '@/components/ui/BotanicalMotifs';
+import { BotanicalSprays, LeafCornerSpray } from '@/components/ui/BotanicalMotifs';
 import { FormAlert, PasswordInput, safeNext } from './auth-shared';
+import { AnimatedCapsuleHero } from './AnimatedCapsuleHero';
 
 const BANNERS: { param: string; value: string; tone: 'info' | 'success' | 'warning'; text: string }[] = [
   { param: 'reason', value: 'idle', tone: 'info', text: 'You were signed out after 15 minutes of inactivity.' },
@@ -315,9 +316,9 @@ export default function SignInPage() {
               </p>
             </motion.div>
 
-            {/* Cadabra.Studio Reference Tablet Medical Card Recreation */}
-            <div className="mt-8">
-              <CadabraTabletPreview />
+            {/* 3D Floating Emerald Capsule Hero Illustration */}
+            <div className="mt-6">
+              <AnimatedCapsuleHero />
             </div>
           </div>
 

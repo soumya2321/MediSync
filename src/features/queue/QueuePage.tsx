@@ -211,102 +211,102 @@ function QueueTable({ data, now, onOpen, listParams }: { data: Paginated<CaseSum
   });
 
   return (
-    <>
-      {/* Desktop table */}
-      <div className="hidden overflow-hidden rounded-2xl border border-white/95 md:block shadow-sm">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-white/90 text-[11.5px] uppercase tracking-wide text-[#8B6B4A] font-bold border-b border-[#8B6B4A]/15">
-            <tr>
-              <th scope="col" className="px-4 py-3 font-bold">Patient & medication</th>
-              <th scope="col" className="px-4 py-3 font-bold">Status & blockers</th>
-              <th scope="col" className="hidden px-4 py-3 font-bold xl:table-cell">Next action</th>
-              <th scope="col" className="px-4 py-3 font-bold">Owner</th>
-              <th scope="col" className="px-4 py-3 font-bold">SLA</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#8B6B4A]/10 bg-white/80 backdrop-blur-md">
-            {data.data.map((r, i) => (
-              <motion.tr
-                key={r.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: Math.min(i * 0.02, 0.2) }}
-                onClick={() => onOpen(r.id)}
-                className="group cursor-pointer transition-colors hover:bg-white"
+    <ul className="space-y-2.5" role="list" aria-label="Refill cases">
+      {data.data.map((r, i) => (
+        <motion.li
+          key={r.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: Math.min(i * 0.02, 0.2), duration: 0.25 }}
+          onClick={() => onOpen(r.id)}
+          className={cn(
+            'cadabra-glass-card group cursor-pointer rounded-2xl border border-white/95 bg-white/90 p-4 sm:p-5 backdrop-blur-md shadow-[0_4px_20px_rgba(139,107,74,0.04)]',
+            'transition-all duration-200 hover:-translate-y-0.5 hover:border-[#0D9488]/40 hover:bg-white/95 hover:shadow-[0_12px_28px_rgba(139,107,74,0.08)]',
+          )}
+        >
+          {/* Header Row: Patient Name + Medication & Case # */}
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
+            <div className="flex flex-wrap items-baseline gap-2 sm:gap-2.5">
+              <Link
+                to={`/cases/${r.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="font-bold text-base sm:text-[17px] text-[#2D2118] group-hover:text-[#0D9488] transition-colors hover:underline"
               >
-                <td className="px-4 py-3">
-                  <Link to={`/cases/${r.id}`} onClick={(e) => e.stopPropagation()} className="font-bold text-[#2D2118] group-hover:text-[#0D9488] transition-colors">
-                    {r.patientName}
-                  </Link>
-                  <div className="flex items-center gap-2 text-[12.5px] text-[#5E4837]">
-                    <span className="font-mono text-[#0D9488] font-bold">{r.caseNumber}</span>
-                    <span className="truncate">{r.medication}</span>
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex flex-wrap items-center gap-1">
-                    <StatusBadge status={r.status} />
-                    <PriorityBadge priority={r.priority} />
-                  </div>
-                  {r.blockers.length > 0 && (
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {r.blockers.slice(0, 2).map((b) => (
-                        <BlockerChip key={b} code={b} />
-                      ))}
-                      {r.blockers.length > 2 && <span className="text-[11.5px] text-[#8B6B4A]">+{r.blockers.length - 2}</span>}
-                    </div>
-                  )}
-                </td>
-                <td className="hidden max-w-[220px] px-4 py-3 text-[13px] text-[#5E4837] xl:table-cell">{r.nextAction}</td>
-                <td className="px-4 py-3">
-                  {r.ownerName ? (
-                    <span className="text-[13px] font-medium text-[#2D2118]">{r.ownerName}</span>
-                  ) : r.ownerRole === 'system' ? (
-                    <span className="text-[13px] text-[#8B6B4A]">Automatic</span>
-                  ) : (
-                    <Button size="sm" variant="secondary" icon={<Hand className="size-3.5" />} onClick={(e) => { e.stopPropagation(); claim.mutate(r.id); }}>
-                      Claim
-                    </Button>
-                  )}
-                  {r.escalationLevel > 0 && <div className="mt-0.5 text-[11.5px] font-bold text-bad-600">Escalated L{r.escalationLevel}</div>}
-                </td>
-                <td className="px-4 py-3">
-                  <SlaBadge state={r.slaState} dueAt={r.dueAt} now={now} />
-                </td>
-              </motion.tr>
+                {r.patientName}
+              </Link>
+              <span className="font-mono text-xs sm:text-[12.5px] font-bold text-[#0D9488]">
+                {r.caseNumber}
+              </span>
+            </div>
+            <div className="text-xs sm:text-[13.5px] font-semibold text-[#5E4837] sm:text-right">
+              {r.medication}
+            </div>
+          </div>
+
+          {/* Status & Blockers Strip */}
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+            <StatusBadge status={r.status} />
+            <PriorityBadge priority={r.priority} />
+            {r.blockers.map((b) => (
+              <BlockerChip key={b} code={b} />
             ))}
-          </tbody>
-        </table>
-      </div>
-      {/* Mobile cards */}
-      <ul className="space-y-2.5 md:hidden">
-        {data.data.map((r) => (
-          <li key={r.id}>
-            <Link to={`/cases/${r.id}`} className="block rounded-2xl border border-white/95 bg-white/90 backdrop-blur-md p-4 transition active:scale-[0.99] hover:border-[#0D9488]/40 shadow-sm">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="truncate font-bold text-[#2D2118]">{r.patientName}</p>
-                  <p className="truncate text-[12.5px] text-[#5E4837]">
-                    <span className="font-mono text-[#0D9488] font-bold">{r.caseNumber}</span> · {r.medication}
-                  </p>
-                </div>
-                <PriorityBadge priority={r.priority} />
+          </div>
+
+          {/* 3-Column Footer Row: Next Action / Owner / SLA */}
+          <div className="mt-3.5 pt-3.5 border-t border-[#8B6B4A]/10 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 sm:items-start">
+            {/* Column 1: Next Action */}
+            <div className="min-w-0">
+              <span className="block text-[11px] font-bold uppercase tracking-wider text-[#8B6B4A]">
+                Next action
+              </span>
+              <p className="mt-1 text-[13px] text-[#5E4837] leading-relaxed">
+                {r.nextAction}
+              </p>
+            </div>
+
+            {/* Column 2: Owner */}
+            <div className="min-w-0">
+              <span className="block text-[11px] font-bold uppercase tracking-wider text-[#8B6B4A]">
+                Owner
+              </span>
+              <div className="mt-1 flex flex-col items-start">
+                {r.ownerName ? (
+                  <span className="text-[13px] font-semibold text-[#2D2118]">{r.ownerName}</span>
+                ) : r.ownerRole === 'system' ? (
+                  <span className="text-[13px] text-[#8B6B4A]">Automatic</span>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    icon={<Hand className="size-3.5" />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      claim.mutate(r.id);
+                    }}
+                  >
+                    Claim
+                  </Button>
+                )}
+                {r.escalationLevel > 0 && (
+                  <span className="mt-0.5 text-[11.5px] font-bold text-bad-600">
+                    Escalated L{r.escalationLevel}
+                  </span>
+                )}
               </div>
-              <div className="mt-2 flex flex-wrap gap-1">
-                <StatusBadge status={r.status} />
-                {r.blockers.slice(0, 2).map((b) => (
-                  <BlockerChip key={b} code={b} />
-                ))}
-              </div>
-              <p className="mt-2 text-[13px] text-[#5E4837]">{r.nextAction}</p>
-              <div className="mt-2 flex items-center justify-between">
+            </div>
+
+            {/* Column 3: SLA */}
+            <div className="min-w-0">
+              <span className="block text-[11px] font-bold uppercase tracking-wider text-[#8B6B4A]">
+                SLA
+              </span>
+              <div className="mt-1 flex items-center">
                 <SlaBadge state={r.slaState} dueAt={r.dueAt} now={now} />
-                <span className="text-[12px] text-[#8B6B4A] font-medium">{r.ownerName ?? 'Unassigned'}</span>
               </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </>
+            </div>
+          </div>
+        </motion.li>
+      ))}
+    </ul>
   );
 }

@@ -7,16 +7,12 @@ import {
   ArrowRight,
   Bot,
   Building2,
-  CalendarClock,
   ChevronRight,
   Fingerprint,
   Inbox,
   Layers,
   PackageCheck,
-  RefreshCcw,
-  ScanText,
   Search,
-  ShieldAlert,
   Stethoscope,
   Workflow,
 } from 'lucide-react';
@@ -30,6 +26,7 @@ import { RoiCalculator } from './RoiCalculator';
 import { RefillJourneyDiagram } from './RefillJourneyDiagram';
 import { SharedCaseDiagram } from './SharedCaseDiagram';
 import { ProcessLifecycleDiagram } from './ProcessLifecycleDiagram';
+import { WhyRefillsGetStuckHexagons } from './WhyRefillsGetStuckHexagons';
 
 const NAV = [
   ['Problem', '#problem'],
@@ -187,71 +184,7 @@ export default function LandingPage() {
             bold="Get Stuck"
             lede="When a refill request requires provider authorization, it enters an uncoordinated labyrinth across five disparate silos."
           />
-          <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                num: '01',
-                title: 'No Refills Remaining',
-                desc: 'Expired prescription or zero authorized refills remaining. The pharmacy cannot dispense without physician reauthorization.',
-                icon: RefreshCcw,
-                accent: 'border-[#93C572]/40 text-[#1E4D2B] bg-[#93C572]/15',
-              },
-              {
-                num: '02',
-                title: 'Provider Approval Required',
-                desc: 'Dosage adjustments, therapeutic substitution, or medical director sign-off required prior to releasing the maintenance therapy.',
-                icon: Stethoscope,
-                accent: 'border-[#0D9488]/40 text-[#0F5143] bg-[#0D9488]/15',
-              },
-              {
-                num: '03',
-                title: 'Patient Visit Needed',
-                desc: 'Annual wellness exam overdue, chronic care checkup needed, or monitoring appointment required before continuing medications.',
-                icon: CalendarClock,
-                accent: 'border-[#D8A7B1]/50 text-[#6B2E38] bg-[#D8A7B1]/20',
-              },
-              {
-                num: '04',
-                title: 'Missing Information',
-                desc: 'Illegible faxes, missing prescriber NPI, unclear SIG instructions, missing quantity, or omitted diagnosis codes stalling fulfillment.',
-                icon: ScanText,
-                accent: 'border-[#8B6B4A]/35 text-[#543825] bg-[#8B6B4A]/15',
-              },
-              {
-                num: '05',
-                title: 'Clinical Review Required',
-                desc: 'Overdue surveillance bloodwork (e.g. HbA1c, eGFR, liver enzymes) or drug-drug interaction alerts requiring provider judgment.',
-                icon: AlertCircle,
-                accent: 'border-[#D8A7B1]/50 text-[#6B2E38] bg-[#D8A7B1]/20',
-              },
-              {
-                num: '06',
-                title: 'Insurance Blockers',
-                desc: 'Prior authorization required, formulary tier exclusion, or step therapy protocol requirements standing between patient and medication.',
-                icon: ShieldAlert,
-                accent: 'border-[#93C572]/40 text-[#1E4D2B] bg-[#93C572]/15',
-              },
-            ].map((card) => (
-              <motion.div
-                key={card.num}
-                variants={fadeUp}
-                className="cadabra-glass-card cadabra-glass-card-hover p-6 sm:p-7 rounded-3xl border border-white/90 shadow-[0_16px_40px_rgba(139,107,74,0.07)] relative group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className={`flex size-12 items-center justify-center rounded-2xl border shadow-sm ${card.accent}`}>
-                    <card.icon className="size-6" />
-                  </span>
-                  <span className="font-mono text-xs font-bold text-[#8B6B4A]">{card.num}</span>
-                </div>
-                <h3 className="mt-5 text-lg font-bold text-[#2D2118] group-hover:text-[#0D9488] transition-colors">
-                  {card.title}
-                </h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-[#5E4837]">
-                  {card.desc}
-                </p>
-              </motion.div>
-            ))}
-          </RevealGroup>
+          <WhyRefillsGetStuckHexagons />
 
           {/* Bottom Insight Banner */}
           <motion.div
